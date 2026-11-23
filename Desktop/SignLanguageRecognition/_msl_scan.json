@@ -1,0 +1,3840 @@
+[
+{
+"n": 2,
+"slug": "hello",
+"theme": "Basic Conversation",
+"hs": [
+"u"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"u",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 3,
+"slug": "name",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 6,
+"slug": "age",
+"theme": "Basic Conversation",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 7,
+"slug": "you",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 8,
+"slug": "me",
+"theme": "Basic Conversation",
+"hs": [
+"go"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav",
+"z"
+],
+"raw": [
+"go",
+"chest_heart_stomach",
+"str_arc_pa_wav",
+"z"
+]
+},
+{
+"n": 9,
+"slug": "both",
+"theme": "Basic Conversation",
+"hs": [
+"v"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"be"
+],
+"raw": [
+"v",
+"nsh_nsm_nsl",
+"be"
+]
+},
+{
+"n": 11,
+"slug": "own",
+"theme": "Basic Conversation",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 12,
+"slug": "question-ask",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 13,
+"slug": "yes",
+"theme": "Basic Conversation",
+"hs": [
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"be"
+],
+"raw": [
+"s",
+"nsh_nsm_nsl",
+"be"
+]
+},
+{
+"n": 14,
+"slug": "no",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"be",
+"5"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"be",
+"5"
+]
+},
+{
+"n": 17,
+"slug": "who",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"cir"
+],
+"raw": [
+"z",
+"head",
+"cir"
+]
+},
+{
+"n": 19,
+"slug": "answer",
+"theme": "Basic Conversation",
+"hs": [
+"o"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"head",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 20,
+"slug": "know",
+"theme": "Basic Conversation",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 23,
+"slug": "think",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 25,
+"slug": "understand",
+"theme": "Basic Conversation",
+"hs": [
+"ls"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"ls",
+"head",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 28,
+"slug": "have",
+"theme": "Basic Conversation",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 30,
+"slug": "have",
+"theme": "Basic Conversation",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 37,
+"slug": "tell",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 38,
+"slug": "answer",
+"theme": "Basic Conversation",
+"hs": [
+"o"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 44,
+"slug": "explain-advise",
+"theme": "Basic Conversation",
+"hs": [
+"o",
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 48,
+"slug": "call",
+"theme": "Basic Conversation",
+"hs": [
+"y"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"y",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 49,
+"slug": "phone-call",
+"theme": "Basic Conversation",
+"hs": [
+"y"
+],
+"loc": "head",
+"mov": [],
+"raw": [
+"y",
+"head"
+]
+},
+{
+"n": 60,
+"slug": "if",
+"theme": "Basic Conversation",
+"hs": [
+"i"
+],
+"loc": "head",
+"mov": [
+"turn"
+],
+"raw": [
+"i",
+"head",
+"turn"
+]
+},
+{
+"n": 61,
+"slug": "or",
+"theme": "Basic Conversation",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 65,
+"slug": "good-pass",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 66,
+"slug": "nice-pleasant",
+"theme": "Basic Conversation",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 67,
+"slug": "average",
+"theme": "Basic Conversation",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 69,
+"slug": "better",
+"theme": "Basic Conversation",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 72,
+"slug": "bad-sin-wrong-fail",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 73,
+"slug": "bad",
+"theme": "Basic Conversation",
+"hs": [
+"al"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 75,
+"slug": "sure",
+"theme": "Basic Conversation",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 80,
+"slug": "parent-slave",
+"theme": "Family and people",
+"hs": [
+"s"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 81,
+"slug": "father-man-male",
+"theme": "Family and people",
+"hs": [
+"x"
+],
+"loc": "head",
+"mov": [
+"op_cl"
+],
+"raw": [
+"x",
+"head",
+"op_cl"
+]
+},
+{
+"n": 82,
+"slug": "mother",
+"theme": "Family and people",
+"hs": [
+"5c"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 83,
+"slug": "mother",
+"theme": "Family and people",
+"hs": [
+"bc"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 84,
+"slug": "girl",
+"theme": "Family and people",
+"hs": [
+"z"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 85,
+"slug": "girl",
+"theme": "Family and people",
+"hs": [
+"al"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 88,
+"slug": "brother",
+"theme": "Family and people",
+"hs": [
+"b"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 89,
+"slug": "sister",
+"theme": "Family and people",
+"hs": [
+"s"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 90,
+"slug": "aunt",
+"theme": "Family and people",
+"hs": [
+"a"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"a",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 91,
+"slug": "aunt",
+"theme": "Family and people",
+"hs": [
+"a"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"a",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 92,
+"slug": "cousin",
+"theme": "Family and people",
+"hs": [
+"c"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"c",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 94,
+"slug": "daughter",
+"theme": "Family and people",
+"hs": [
+"go",
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 95,
+"slug": "wife",
+"theme": "Family and people",
+"hs": [
+"5"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 99,
+"slug": "person",
+"theme": "Family and people",
+"hs": [
+"g"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"g",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 102,
+"slug": "young",
+"theme": "Family and people",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 106,
+"slug": "drunk-drunkness",
+"theme": "Family and people",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 107,
+"slug": "thief-steal",
+"theme": "Family and people",
+"hs": [
+"v",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"v",
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 108,
+"slug": "deaf",
+"theme": "Family and people",
+"hs": [
+"u"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"u",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 109,
+"slug": "deafened",
+"theme": "Family and people",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"op_cl"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"op_cl"
+]
+},
+{
+"n": 110,
+"slug": "blind",
+"theme": "Family and people",
+"hs": [
+"u"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"u",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 113,
+"slug": "sorry-complain",
+"theme": "Emotions",
+"hs": [
+"a"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"cir"
+],
+"raw": [
+"a",
+"chest_heart_stomach",
+"cir"
+]
+},
+{
+"n": 117,
+"slug": "hate",
+"theme": "Emotions",
+"hs": [
+"p"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"p",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 118,
+"slug": "disgust",
+"theme": "Emotions",
+"hs": [
+"5"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 120,
+"slug": "love",
+"theme": "Emotions",
+"hs": [
+"l"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"l",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 123,
+"slug": "mercy",
+"theme": "Emotions",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 125,
+"slug": "feeling",
+"theme": "Emotions",
+"hs": [
+"fi"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"fi",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 126,
+"slug": "tear",
+"theme": "Emotions",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 128,
+"slug": "jealous",
+"theme": "Emotions",
+"hs": [
+"i"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"i",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 130,
+"slug": "attitude",
+"theme": "Emotions",
+"hs": [
+"v"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"cir"
+],
+"raw": [
+"v",
+"chest_heart_stomach",
+"cir"
+]
+},
+{
+"n": 134,
+"slug": "surprise",
+"theme": "Emotions",
+"hs": [
+"xi"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"xi",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 135,
+"slug": "alone",
+"theme": "Emotions",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 138,
+"slug": "time-watch",
+"theme": "Time",
+"hs": [
+"z",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"s",
+"arm_elbow",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 140,
+"slug": "january",
+"theme": "Time",
+"hs": [
+"i"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"i",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 141,
+"slug": "february",
+"theme": "Time",
+"hs": [
+"f"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"f",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 146,
+"slug": "july",
+"theme": "Time",
+"hs": [
+"i",
+"y"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"i",
+"y",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 149,
+"slug": "october-hot",
+"theme": "Time",
+"hs": [
+"x"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"x",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 150,
+"slug": "november",
+"theme": "Time",
+"hs": [
+"go",
+"z",
+"go"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"z",
+"go",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 152,
+"slug": "day",
+"theme": "Time",
+"hs": [
+"z",
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 153,
+"slug": "monday",
+"theme": "Time",
+"hs": [
+"m"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"m",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 155,
+"slug": "wednesday",
+"theme": "Time",
+"hs": [
+"w"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"w",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 157,
+"slug": "friday",
+"theme": "Time",
+"hs": [
+"f"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"f",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 158,
+"slug": "friday-muslim-islam",
+"theme": "Time",
+"hs": [
+"5c"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 159,
+"slug": "saturday-goat",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 161,
+"slug": "dawn",
+"theme": "Time",
+"hs": [
+"o",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 163,
+"slug": "afternoon",
+"theme": "Time",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 165,
+"slug": "yesterday",
+"theme": "Time",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"al"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"al"
+]
+},
+{
+"n": 166,
+"slug": "now-today",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 167,
+"slug": "tomorrow",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 168,
+"slug": "tomorrow-home",
+"theme": "Time",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 169,
+"slug": "next-after",
+"theme": "Time",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"z"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"z"
+]
+},
+{
+"n": 171,
+"slug": "going",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 174,
+"slug": "begin-start",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 176,
+"slug": "once",
+"theme": "Time",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 185,
+"slug": "secondary",
+"theme": "Education",
+"hs": [
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 188,
+"slug": "chichewa",
+"theme": "Education",
+"hs": [
+"c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"c",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 189,
+"slug": "chichewa",
+"theme": "Education",
+"hs": [
+"ls"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"ls",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 190,
+"slug": "chitumbuka-toilet",
+"theme": "Education",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"wa"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"wa"
+]
+},
+{
+"n": 191,
+"slug": "english",
+"theme": "Education",
+"hs": [
+"l"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"l",
+"head",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 192,
+"slug": "write-chalk-pen-register",
+"theme": "Education",
+"hs": [
+"lo"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"wa"
+],
+"raw": [
+"lo",
+"nsh_nsm_nsl",
+"wa"
+]
+},
+{
+"n": 198,
+"slug": "science-physical-science",
+"theme": "Education",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 200,
+"slug": "nursery-school",
+"theme": "Education",
+"hs": [
+"a"
+],
+"loc": "head",
+"mov": [],
+"raw": [
+"a",
+"head"
+]
+},
+{
+"n": 202,
+"slug": "knowledge-intelligent",
+"theme": "Education",
+"hs": [
+"vc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"vc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 203,
+"slug": "percent",
+"theme": "Education",
+"hs": [
+"o"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 204,
+"slug": "practicals-practice",
+"theme": "Education",
+"hs": [
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 206,
+"slug": "paper",
+"theme": "Education",
+"hs": [
+"go"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 215,
+"slug": "police-police-officer",
+"theme": "Profession",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 217,
+"slug": "guard",
+"theme": "Profession",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 218,
+"slug": "nurse",
+"theme": "Profession",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 224,
+"slug": "interview",
+"theme": "Profession",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 232,
+"slug": "breathing",
+"theme": "Health",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 233,
+"slug": "sick",
+"theme": "Health",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 234,
+"slug": "sick",
+"theme": "Health",
+"hs": [
+"o"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"head",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 239,
+"slug": "pregnant",
+"theme": "Health",
+"hs": [
+"bc",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"s",
+"arm_elbow",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 240,
+"slug": "heart",
+"theme": "Health",
+"hs": [
+"z"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 244,
+"slug": "blue",
+"theme": "Colours",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"wa"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"wa"
+]
+},
+{
+"n": 245,
+"slug": "yellow-youth",
+"theme": "Colours",
+"hs": [
+"y"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"y",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 246,
+"slug": "black",
+"theme": "Colours",
+"hs": [
+"p"
+],
+"loc": "head",
+"mov": [],
+"raw": [
+"p",
+"head"
+]
+},
+{
+"n": 247,
+"slug": "red",
+"theme": "Colours",
+"hs": [
+"r"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"r",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 248,
+"slug": "red",
+"theme": "Colours",
+"hs": [
+"r"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"wa"
+],
+"raw": [
+"r",
+"nsh_nsm_nsl",
+"wa"
+]
+},
+{
+"n": 249,
+"slug": "green",
+"theme": "Colours",
+"hs": [
+"g"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"g",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 252,
+"slug": "white",
+"theme": "Colours",
+"hs": [
+"5"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"5",
+"chest_heart_stomach",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 253,
+"slug": "purple",
+"theme": "Colours",
+"hs": [
+"p"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"wa"
+],
+"raw": [
+"p",
+"nsh_nsm_nsl",
+"wa"
+]
+},
+{
+"n": 257,
+"slug": "pig",
+"theme": "Animals",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 258,
+"slug": "pig",
+"theme": "Animals",
+"hs": [
+"s"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 262,
+"slug": "monkey-baboon",
+"theme": "Animals",
+"hs": [
+"bc",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"s",
+"arm_elbow",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 263,
+"slug": "leopard",
+"theme": "Animals",
+"hs": [
+"z"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 268,
+"slug": "snake",
+"theme": "Animals",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 272,
+"slug": "scorpion",
+"theme": "Animals",
+"hs": [
+"x"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"x",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 274,
+"slug": "turkey",
+"theme": "Animals",
+"hs": [
+"p"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"p",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 275,
+"slug": "duck",
+"theme": "Animals",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 277,
+"slug": "owl",
+"theme": "Animals",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"cir"
+],
+"raw": [
+"z",
+"head",
+"cir"
+]
+},
+{
+"n": 282,
+"slug": "captain",
+"theme": "Sports",
+"hs": [
+"c"
+],
+"loc": "upperarm_shoulder",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"c",
+"upperarm_shoulder",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 284,
+"slug": "football",
+"theme": "Sports",
+"hs": [
+"p"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"p",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 285,
+"slug": "netball",
+"theme": "Sports",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 288,
+"slug": "airplane-fly",
+"theme": "Transport",
+"hs": [
+"y"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"y",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 294,
+"slug": "helicopter",
+"theme": "Transport",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 296,
+"slug": "fuel",
+"theme": "Transport",
+"hs": [
+"u"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"u",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 302,
+"slug": "hot-october",
+"theme": "Weather and Nature",
+"hs": [
+"x"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"x",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 303,
+"slug": "water",
+"theme": "Weather and Nature",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"wi"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"wi"
+]
+},
+{
+"n": 305,
+"slug": "sun",
+"theme": "Weather and Nature",
+"hs": [
+"o"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"o",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 306,
+"slug": "moon",
+"theme": "Weather and Nature",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 307,
+"slug": "fruit",
+"theme": "Food",
+"hs": [
+"5c"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 308,
+"slug": "fruit",
+"theme": "Food",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 309,
+"slug": "mango",
+"theme": "Food",
+"hs": [
+"a"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"a",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 311,
+"slug": "orange",
+"theme": "Food",
+"hs": [
+"5c",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 312,
+"slug": "lemon",
+"theme": "Food",
+"hs": [
+"al"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"op_cl"
+],
+"raw": [
+"al",
+"nsh_nsm_nsl",
+"op_cl"
+]
+},
+{
+"n": 313,
+"slug": "nsima",
+"theme": "Food",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 318,
+"slug": "beans",
+"theme": "Food",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 321,
+"slug": "sugarcane",
+"theme": "Food",
+"hs": [
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn",
+"op_cl"
+],
+"raw": [
+"s",
+"nsh_nsm_nsl",
+"turn",
+"op_cl"
+]
+},
+{
+"n": 323,
+"slug": "relish",
+"theme": "Food",
+"hs": [
+"f"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"f",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 324,
+"slug": "meat",
+"theme": "Food",
+"hs": [
+"t"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"t",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 325,
+"slug": "egg",
+"theme": "Food",
+"hs": [
+"u"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"u",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 326,
+"slug": "egg",
+"theme": "Food",
+"hs": [
+"x"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"x",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 330,
+"slug": "delicious",
+"theme": "Food",
+"hs": [
+"g"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"g",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 331,
+"slug": "sweet",
+"theme": "Food",
+"hs": [
+"lo"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"lo",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 334,
+"slug": "biscuit",
+"theme": "Food",
+"hs": [
+"l"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"l",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 337,
+"slug": "beer",
+"theme": "Food",
+"hs": [
+"gc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"gc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 339,
+"slug": "full-stomach-satisfied",
+"theme": "Food",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 347,
+"slug": "country",
+"theme": "Places",
+"hs": [
+"c",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"cir"
+],
+"raw": [
+"c",
+"s",
+"arm_elbow",
+"cir"
+]
+},
+{
+"n": 348,
+"slug": "city",
+"theme": "Places",
+"hs": [
+"o"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl",
+"op_cl"
+],
+"raw": [
+"o",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl",
+"op_cl"
+]
+},
+{
+"n": 349,
+"slug": "village-grass",
+"theme": "Places",
+"hs": [
+"t",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"t",
+"s",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 350,
+"slug": "south-africa",
+"theme": "Places",
+"hs": [
+"al"
+],
+"loc": "head",
+"mov": [
+"cir"
+],
+"raw": [
+"al",
+"head",
+"cir"
+]
+},
+{
+"n": 351,
+"slug": "tanzania",
+"theme": "Places",
+"hs": [
+"lo"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"lo",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 352,
+"slug": "malawi",
+"theme": "Places",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir",
+"m"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"cir",
+"m"
+]
+},
+{
+"n": 355,
+"slug": "mulanje",
+"theme": "Places",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 356,
+"slug": "mwanza",
+"theme": "Places",
+"hs": [
+"5c",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 357,
+"slug": "phalombe",
+"theme": "Places",
+"hs": [
+"o",
+"z",
+"c",
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"op_cl",
+"cir"
+],
+"raw": [
+"o",
+"z",
+"c",
+"z",
+"nsh_nsm_nsl",
+"op_cl",
+"cir"
+]
+},
+{
+"n": 358,
+"slug": "dedza",
+"theme": "Places",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 359,
+"slug": "kasungu-tobacco",
+"theme": "Places",
+"hs": [
+"k"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"k",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 360,
+"slug": "blantyre",
+"theme": "Places",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 361,
+"slug": "blantyre",
+"theme": "Places",
+"hs": [
+"b",
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [],
+"raw": [
+"b",
+"t",
+"nsh_nsm_nsl"
+]
+},
+{
+"n": 364,
+"slug": "rumphi",
+"theme": "Places",
+"hs": [
+"r"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"r",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 365,
+"slug": "zomba",
+"theme": "Places",
+"hs": [
+"z",
+"a"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"a",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 366,
+"slug": "likoma",
+"theme": "Places",
+"hs": [
+"5c",
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 368,
+"slug": "mzimba",
+"theme": "Places",
+"hs": [
+"z",
+"a"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"a",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 374,
+"slug": "lilongwe",
+"theme": "Places",
+"hs": [
+"l"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"l",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 375,
+"slug": "mountain-view",
+"theme": "Places",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 376,
+"slug": "mary-view",
+"theme": "Places",
+"hs": [
+"al"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"cir"
+],
+"raw": [
+"al",
+"chest_heart_stomach",
+"cir"
+]
+},
+{
+"n": 377,
+"slug": "nguludi",
+"theme": "Places",
+"hs": [
+"al"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 379,
+"slug": "home",
+"theme": "Places",
+"hs": [
+"go"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 380,
+"slug": "home-tomorrow",
+"theme": "Places",
+"hs": [
+"bc"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 381,
+"slug": "hospital",
+"theme": "Places",
+"hs": [
+"al"
+],
+"loc": "upperarm_shoulder",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"upperarm_shoulder",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 382,
+"slug": "hospital",
+"theme": "Places",
+"hs": [
+"z"
+],
+"loc": "upperarm_shoulder",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"upperarm_shoulder",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 385,
+"slug": "maizemill",
+"theme": "Places",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 387,
+"slug": "zoo",
+"theme": "Places",
+"hs": [
+"c"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"c",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 389,
+"slug": "mosque",
+"theme": "Places",
+"hs": [
+"z",
+"c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 391,
+"slug": "small-little",
+"theme": "Other Everyday Signs",
+"hs": [
+"g"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"g",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 397,
+"slug": "between",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 400,
+"slug": "inside-include-vote",
+"theme": "Other Everyday Signs",
+"hs": [
+"go",
+"c"
+],
+"loc": "hand_wrist_palm_finger_nail",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"c",
+"hand_wrist_palm_finger_nail",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 401,
+"slug": "outside",
+"theme": "Other Everyday Signs",
+"hs": [
+"al"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 402,
+"slug": "little",
+"theme": "Other Everyday Signs",
+"hs": [
+"go"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 404,
+"slug": "full",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 408,
+"slug": "all",
+"theme": "Other Everyday Signs",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 413,
+"slug": "another",
+"theme": "Other Everyday Signs",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 418,
+"slug": "poor",
+"theme": "Other Everyday Signs",
+"hs": [
+"5c",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"5c",
+"s",
+"arm_elbow",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 419,
+"slug": "poor",
+"theme": "Other Everyday Signs",
+"hs": [
+"5"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 422,
+"slug": "dangerous",
+"theme": "Other Everyday Signs",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 424,
+"slug": "difficult",
+"theme": "Other Everyday Signs",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 426,
+"slug": "money",
+"theme": "Other Everyday Signs",
+"hs": [
+"go"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 429,
+"slug": "fee",
+"theme": "Other Everyday Signs",
+"hs": [
+"f"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"f",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 433,
+"slug": "going",
+"theme": "Other Everyday Signs",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 434,
+"slug": "come",
+"theme": "Other Everyday Signs",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 437,
+"slug": "arrive",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 438,
+"slug": "back-return-refund",
+"theme": "Other Everyday Signs",
+"hs": [
+"al"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"al",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 443,
+"slug": "see-look",
+"theme": "Other Everyday Signs",
+"hs": [
+"v"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"v",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 446,
+"slug": "sleep-dozing",
+"theme": "Other Everyday Signs",
+"hs": [
+"5"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 448,
+"slug": "draw",
+"theme": "Other Everyday Signs",
+"hs": [
+"i"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"i",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 449,
+"slug": "cut-circumcision",
+"theme": "Other Everyday Signs",
+"hs": [
+"v",
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"v",
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 450,
+"slug": "throw",
+"theme": "Other Everyday Signs",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 454,
+"slug": "washing-powder",
+"theme": "Other Everyday Signs",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 459,
+"slug": "grow",
+"theme": "Other Everyday Signs",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"bc"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"bc"
+]
+},
+{
+"n": 460,
+"slug": "finish",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 461,
+"slug": "finish",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"b",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 465,
+"slug": "close-key",
+"theme": "Other Everyday Signs",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"turn"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"turn"
+]
+},
+{
+"n": 469,
+"slug": "open",
+"theme": "Other Everyday Signs",
+"hs": [
+"t"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"t",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 470,
+"slug": "keep",
+"theme": "Other Everyday Signs",
+"hs": [
+"go",
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"go",
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 473,
+"slug": "bite",
+"theme": "Other Everyday Signs",
+"hs": [
+"5c",
+"s"
+],
+"loc": "arm_elbow",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"5c",
+"s",
+"arm_elbow",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 476,
+"slug": "kill-murder",
+"theme": "Other Everyday Signs",
+"hs": [
+"s"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"s",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 478,
+"slug": "kill",
+"theme": "Other Everyday Signs",
+"hs": [
+"b"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"b",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 481,
+"slug": "search",
+"theme": "Other Everyday Signs",
+"hs": [
+"c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"cir"
+],
+"raw": [
+"c",
+"nsh_nsm_nsl",
+"cir"
+]
+},
+{
+"n": 482,
+"slug": "seen",
+"theme": "Other Everyday Signs",
+"hs": [
+"z"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 483,
+"slug": "choose-select",
+"theme": "Other Everyday Signs",
+"hs": [
+"l"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"l",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 484,
+"slug": "find-found-save",
+"theme": "Other Everyday Signs",
+"hs": [
+"c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav",
+"op_cl"
+],
+"raw": [
+"c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav",
+"op_cl"
+]
+},
+{
+"n": 492,
+"slug": "chief",
+"theme": "Family and people",
+"hs": [
+"z"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"z",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 498,
+"slug": "deposit",
+"theme": "Other Everyday Signs",
+"hs": [
+"o"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"o",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 501,
+"slug": "idle",
+"theme": "Other Everyday Signs",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"nm_nhm"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"nm_nhm"
+]
+},
+{
+"n": 503,
+"slug": "life-skills",
+"theme": "Education",
+"hs": [
+"5c"
+],
+"loc": "chest_heart_stomach",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"chest_heart_stomach",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 505,
+"slug": "midwife",
+"theme": "Profession",
+"hs": [
+"bc"
+],
+"loc": "head",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"bc",
+"head",
+"str_arc_pa_wav"
+]
+},
+{
+"n": 509,
+"slug": "stone",
+"theme": "Weather and Nature",
+"hs": [
+"5c"
+],
+"loc": "nsh_nsm_nsl",
+"mov": [
+"str_arc_pa_wav"
+],
+"raw": [
+"5c",
+"nsh_nsm_nsl",
+"str_arc_pa_wav"
+]
+}
+]

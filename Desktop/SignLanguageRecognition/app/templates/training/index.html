@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+{% block title %}Model training &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Model training{% endblock %}
+{% block mobile_title %}Model training{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-navy">Model training</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Training runs execute in a background process. The dataset is always split by participant so that the
+                test participants are never used for training or tuning.
+            </p>
+        </div>
+        <a href="{{ url_for('evaluation.index') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-chart-simple"></i> View evaluation
+        </a>
+    </div>
+
+    <!-- ================= Readiness ================= -->
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="stat-card">
+            <p class="stat-label">Usable samples</p>
+            <p class="stat-value" id="tr-samples">{{ stats.total_samples }}</p>
+            <p class="stat-hint">From validated gestures</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Validated classes</p>
+            <p class="stat-value" id="tr-classes">{{ stats.validated_classes }}</p>
+            <p class="stat-hint">Ready for training</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Participants</p>
+            <p class="stat-value" id="tr-participants">{{ stats.participant_count }}</p>
+            <p class="stat-hint">At least 3 required for a grouped split</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Exported datasets</p>
+            <p class="stat-value" id="tr-versions">{{ dataset_versions|length }}</p>
+            <p class="stat-hint">In dataset/processed</p>
+        </div>
+    </div>
+
+    <div class="grid gap-5 xl:grid-cols-5">
+
+        <!-- ================= Launch form ================= -->
+        <div class="xl:col-span-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Start a training run</h3>
+                </div>
+                <form id="training-form" class="card-body space-y-4">
+                    <div>
+                        <label for="tr-algorithm" class="form-label">Algorithm</label>
+                        <select id="tr-algorithm" class="form-select">
+                            {% for key, label in algorithms.items() %}
+                            <option value="{{ key }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help">Random Forest is the primary model; SVM and KNN are the comparison models.</p>
+                    </div>
+
+                    <div>
+                        <label for="tr-dataset" class="form-label">Dataset version</label>
+                        <select id="tr-dataset" class="form-select">
+                            <option value="">Latest exported dataset</option>
+                            {% for version in dataset_versions %}
+                            <option value="{{ version.version }}">
+                                {{ version.version }} &mdash; {{ version.sample_count }} samples, {{ version.class_count }} classes
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="tr-hands" class="form-label">Hand configuration</label>
+                        <select id="tr-hands" class="form-select">
+                            <option value="auto">Auto (train one model per configuration present)</option>
+                            <option value="1">One hand only (63 features)</option>
+                            <option value="2">Two hands only (128 features)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="tr-params" class="form-label">Hyper-parameters (JSON)</label>
+                        <textarea id="tr-params" rows="6" class="form-textarea font-mono text-xs" spellcheck="false"></textarea>
+                        <p class="form-help">
+                            Leave empty for the defaults. Example:
+                            <code class="text-[11px]">{"n_estimators": [200, 400], "max_depth": [null, 12]}</code>
+                        </p>
+                    </div>
+
+                    <label class="flex items-center gap-2 text-sm text-navy-muted">
+                        <input type="checkbox" id="tr-tune" class="h-4 w-4 rounded border-line text-accent focus:ring-accent" checked>
+                        Tune hyper-parameters with grouped cross-validation
+                    </label>
+
+                    <div id="tr-error" class="hidden rounded-md border border-bad/40 bg-bad/5 px-3.5 py-2.5 text-xs text-bad"></div>
+
+                    <button type="submit" id="tr-submit" class="btn btn-primary btn-block">
+                        <i class="fa-solid fa-play"></i> Start training
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= Runs ================= -->
+        <div class="xl:col-span-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Training runs</h3>
+                    <button type="button" id="tr-refresh" class="btn btn-secondary btn-sm">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Run</th><th>Algorithm</th><th>Status</th>
+                                <th>Progress</th><th>Duration</th><th>Started</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tr-runs">
+                            {% for run in runs %}
+                            <tr data-run-id="{{ run.id }}">
+                                <td class="font-medium text-navy">#{{ run.id }}</td>
+                                <td>{{ run.configuration.get('algorithm_label', run.configuration.get('algorithm', '-')) }}</td>
+                                <td>
+                                    {% set tone = {'completed': 'badge-ok', 'running': 'badge-info', 'queued': 'badge-warn', 'failed': 'badge-bad', 'cancelled': 'badge-muted'}.get(run.status, 'badge-muted') %}
+                                    <span class="badge {{ tone }} js-run-status">{{ run.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="h-1.5 w-20 overflow-hidden rounded-full bg-surface">
+                                            <div class="h-full rounded-full bg-accent js-run-progress" style="width: {{ run.progress }}%"></div>
+                                        </div>
+                                        <span class="text-xs text-slate-500 js-run-progress-value">{{ '%.0f'|format(run.progress) }}%</span>
+                                    </div>
+                                </td>
+                                <td class="js-run-duration">
+                                    {% if run.duration_seconds %}{{ '%.1f'|format(run.duration_seconds) }}s{% else %}-{% endif %}
+                                </td>
+                                <td class="whitespace-nowrap text-slate-500">{{ run.started_at|datetime }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-xs text-slate-500">
+                    Training logs are written to <code>artifacts/reports/logs/</code>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Model versions ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Model versions</h3>
+            <span class="text-xs text-slate-500">Publish an approved model to enable live recognition</span>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Version</th><th>Algorithm</th><th>Hands</th><th>Accuracy</th>
+                        <th>Macro F1</th><th>Threshold</th><th>Status</th><th>Created</th><th></th>
+                    </tr>
+                </thead>
+                <tbody id="tr-models">
+                    {% for model in models %}
+                    <tr data-model-id="{{ model.id }}">
+                        <td class="font-medium text-navy">{{ model.version }}</td>
+                        <td>{{ model.algorithm|replace('_', ' ')|title }}</td>
+                        <td>{{ model.schema.get('hand_count', '-') }}</td>
+                        <td>{{ '%.1f'|format((model.accuracy or 0) * 100) }}%</td>
+                        <td>{{ '%.1f'|format((model.f1_score or 0) * 100) }}%</td>
+                        <td>{{ '%.2f'|format(model.rejection_threshold) if model.rejection_threshold else '-' }}</td>
+                        <td>
+                            {% set tone = {'published': 'badge-ok', 'candidate': 'badge-info', 'training': 'badge-warn', 'failed': 'badge-bad', 'archived': 'badge-muted'}.get(model.status, 'badge-muted') %}
+                            <span class="badge {{ tone }} js-model-status">{{ model.status }}</span>
+                        </td>
+                        <td class="whitespace-nowrap text-slate-500">{{ model.created_at|datetime }}</td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                {% if model.status != 'published' %}
+                                <button type="button" class="btn btn-secondary btn-sm js-publish-model" data-id="{{ model.id }}">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Publish
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn btn-secondary btn-sm js-archive-model" data-id="{{ model.id }}">
+                                    <i class="fa-solid fa-box-archive"></i> Archive
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if not models %}
+        <div class="card-body py-10 text-center">
+            <i class="fa-solid fa-brain text-2xl text-slate-300"></i>
+            <p class="mt-3 text-sm font-medium text-navy">No model has been trained yet</p>
+            <p class="mt-1 text-xs text-slate-500">Collect samples, export the dataset and start a training run.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    "use strict";
+
+    const form = document.getElementById("training-form");
+    if (!form) return;
+
+    const algorithmSelect = document.getElementById("tr-algorithm");
+    const paramsField = document.getElementById("tr-params");
+    const errorBox = document.getElementById("tr-error");
+    const submitButton = document.getElementById("tr-submit");
+    const runsBody = document.getElementById("tr-runs");
+    const modelsBody = document.getElementById("tr-models");
+
+    const DEFAULT_PARAMS = {
+        random_forest: { n_estimators: [200, 400], max_depth: [null, 12, 20], min_samples_leaf: [1, 2], class_weight: ["balanced", null] },
+        svm: { C: [0.5, 1.0, 5.0, 10.0], kernel: ["rbf", "linear"], gamma: ["scale"], class_weight: ["balanced", null] },
+        knn: { n_neighbors: [3, 5, 7, 9], weights: ["uniform", "distance"], p: [1, 2] }
+    };
+
+    function applyDefaults() {
+        const algorithm = algorithmSelect.value;
+        paramsField.value = JSON.stringify(DEFAULT_PARAMS[algorithm] || {}, null, 2);
+    }
+    algorithmSelect.addEventListener("change", applyDefaults);
+    applyDefaults();
+
+    let pollTimer = null;
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.classList.remove("hidden");
+    }
+
+    function clearError() {
+        errorBox.classList.add("hidden");
+        errorBox.textContent = "";
+    }
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        clearError();
+
+        let parameters = {};
+        const raw = paramsField.value.trim();
+        if (raw) {
+            try {
+                parameters = JSON.parse(raw);
+            } catch (error) {
+                showError("The hyper-parameters must be valid JSON.");
+                return;
+            }
+        }
+
+        submitButton.disabled = true;
+        try {
+            const response = await window.MSL.api.post("/training/api/training/start", {
+                algorithm: algorithmSelect.value,
+                dataset_version: document.getElementById("tr-dataset").value,
+                hand_count: document.getElementById("tr-hands").value,
+                parameters: parameters,
+                tune: document.getElementById("tr-tune").checked
+            });
+            window.MSL.toast("Training run #" + response.run.id + " started.", "ok");
+            await loadRuns();
+            startPolling();
+        } catch (error) {
+            showError(error.message);
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    function startPolling() {
+        if (pollTimer) window.clearInterval(pollTimer);
+        pollTimer = window.setInterval(async function () {
+            await loadRuns();
+            await loadModels();
+            const active = runsBody.querySelectorAll('[data-run-id]');
+            let stillRunning = false;
+            active.forEach(function (row) {
+                const status = row.querySelector(".js-run-status");
+                if (status && (status.textContent.trim() === "running" || status.textContent.trim() === "queued")) {
+                    stillRunning = true;
+                }
+            });
+            if (!stillRunning) {
+                window.clearInterval(pollTimer);
+                pollTimer = null;
+            }
+        }, 2500);
+    }
+
+    async function loadRuns() {
+        try {
+            const response = await window.MSL.api.get("/training/api/training/runs");
+            const runs = response.runs || [];
+            runsBody.innerHTML = "";
+            if (!runs.length) {
+                runsBody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-sm text-slate-400">No training runs yet.</td></tr>';
+                return;
+            }
+            runs.forEach(function (run) {
+                const row = document.createElement("tr");
+                row.dataset.runId = run.id;
+                const tone = { completed: "badge-ok", running: "badge-info", queued: "badge-warn", failed: "badge-bad", cancelled: "badge-muted" };
+                row.innerHTML =
+                    '<td class="font-medium text-navy">#' + run.id + "</td>" +
+                    "<td>" + window.MSL.escapeHtml(run.configuration.algorithm_label || run.configuration.algorithm || "-") + "</td>" +
+                    '<td><span class="badge ' + (tone[run.status] || "badge-muted") + ' js-run-status">' + run.status + "</span></td>" +
+                    '<td><div class="flex items-center gap-2"><div class="h-1.5 w-20 overflow-hidden rounded-full bg-surface">' +
+                    '<div class="h-full rounded-full bg-accent js-run-progress" style="width: ' + (run.progress || 0) + '%"></div></div>' +
+                    '<span class="text-xs text-slate-500 js-run-progress-value">' + Math.round(run.progress || 0) + "%</span></div></td>" +
+                    '<td class="js-run-duration">' +
+                    (run.duration_seconds ? Number(run.duration_seconds).toFixed(1) + "s" : "-") + "</td>" +
+                    '<td class="whitespace-nowrap text-slate-500">' + window.MSL.formatDateTime(run.started_at) + "</td>";
+                runsBody.appendChild(row);
+            });
+        } catch (error) {
+            /* keep the server-rendered rows */
+        }
+    }
+
+    async function loadModels() {
+        try {
+            const response = await window.MSL.api.get("/training/api/training/models");
+            const models = response.models || [];
+            modelsBody.innerHTML = "";
+            if (!models.length) {
+                modelsBody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-sm text-slate-400">No model versions yet.</td></tr>';
+                return;
+            }
+            models.forEach(function (model) {
+                const row = document.createElement("tr");
+                const tone = { published: "badge-ok", candidate: "badge-info", training: "badge-warn", failed: "badge-bad", archived: "badge-muted" };
+                const schema = model.feature_schema || {};
+                row.innerHTML =
+                    '<td class="font-medium text-navy">' + window.MSL.escapeHtml(model.version) + "</td>" +
+                    "<td>" + window.MSL.escapeHtml(String(model.algorithm || "").replace(/_/g, " ")) + "</td>" +
+                    "<td>" + (schema.hand_count || "-") + "</td>" +
+                    "<td>" + ((model.accuracy || 0) * 100).toFixed(1) + "%</td>" +
+                    "<td>" + ((model.f1_score || 0) * 100).toFixed(1) + "%</td>" +
+                    "<td>" + (model.rejection_threshold ? Number(model.rejection_threshold).toFixed(2) : "-") + "</td>" +
+                    '<td><span class="badge ' + (tone[model.status] || "badge-muted") + ' js-model-status">' + model.status + "</span></td>" +
+                    '<td class="whitespace-nowrap text-slate-500">' + window.MSL.formatDateTime(model.created_at) + "</td>" +
+                    '<td class="text-right"><button type="button" class="btn btn-secondary btn-sm ' +
+                    (model.status === "published" ? "js-archive-model" : "js-publish-model") +
+                    '" data-id="' + model.id + '"><i class="fa-solid ' +
+                    (model.status === "published" ? "fa-box-archive" : "fa-cloud-arrow-up") + '"></i> ' +
+                    (model.status === "published" ? "Archive" : "Publish") + "</button></td>";
+                modelsBody.appendChild(row);
+            });
+            bindModelButtons();
+        } catch (error) {
+            /* keep the server-rendered rows */
+        }
+    }
+
+    function bindModelButtons() {
+        modelsBody.querySelectorAll(".js-publish-model").forEach(function (button) {
+            button.addEventListener("click", async function () {
+                if (!window.confirm("Publish this model version? It will replace the currently published model for the same hand configuration.")) return;
+                try {
+                    await window.MSL.api.post("/training/api/training/models/" + button.dataset.id + "/publish", {});
+                    window.MSL.toast("The model was published.", "ok");
+                    loadModels();
+                } catch (error) {
+                    window.MSL.toast(error.message, "bad");
+                }
+            });
+        });
+        modelsBody.querySelectorAll(".js-archive-model").forEach(function (button) {
+            button.addEventListener("click", async function () {
+                try {
+                    await window.MSL.api.post("/training/api/training/models/" + button.dataset.id + "/archive", {});
+                    window.MSL.toast("The model was archived.", "ok");
+                    loadModels();
+                } catch (error) {
+                    window.MSL.toast(error.message, "bad");
+                }
+            });
+        });
+    }
+
+    document.getElementById("tr-refresh").addEventListener("click", function () {
+        loadRuns();
+        loadModels();
+    });
+
+    bindModelButtons();
+    loadRuns();
+    loadModels();
+})();
+</script>
+{% endblock %}

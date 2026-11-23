@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Environment and secrets
+.env
+*.env
+!.env.example
+
+# Instance data
+instance/
+*.db
+*.sqlite
+*.sqlite3
+instance/uploads/
+
+# MediaPipe model asset (downloaded, not committed)
+assets/models/*.task
+
+# Generated datasets and artefacts
+dataset/raw/*
+!dataset/raw/.gitkeep
+dataset/processed/*
+!dataset/processed/.gitkeep
+dataset/exports/*
+!dataset/exports/.gitkeep
+dataset/metadata/*
+!dataset/metadata/.gitkeep
+artifacts/models/*.joblib
+artifacts/encoders/*.joblib
+artifacts/reports/*.json
+artifacts/reports/*.png
+artifacts/reports/logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

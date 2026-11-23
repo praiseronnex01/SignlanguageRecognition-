@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Sign in &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Sign in{% endblock %}
+{% block mobile_title %}Sign in{% endblock %}
+
+{% block content %}
+<div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2 lg:items-center">
+
+    <div class="card p-6 sm:p-8">
+        <h2 class="text-lg font-semibold text-navy">Sign in to your account</h2>
+        <p class="mt-1 text-sm text-slate-500">Use live recognition, review your history and browse the MSL vocabulary.</p>
+
+        <form method="post" class="mt-6 space-y-4" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div>
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-input", placeholder="you@example.com", autocomplete="email") }}
+                {% for error in form.email.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div>
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input", placeholder="Your password", autocomplete="current-password") }}
+                {% for error in form.password.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-navy-muted">
+                {{ form.remember(class="h-4 w-4 rounded border-line text-accent focus:ring-accent") }}
+                {{ form.remember.label.text }}
+            </label>
+
+            {{ form.submit(class="btn btn-primary btn-block btn-lg") }}
+        </form>
+
+        <p class="mt-6 border-t border-line pt-5 text-center text-sm text-slate-500">
+            Do not have an account?
+            <a href="{{ url_for('auth.register_page') }}" class="font-medium text-accent hover:underline">Create one</a>
+        </p>
+    </div>
+
+    <aside class="hidden lg:block">
+        <div class="rounded-xl bg-navy p-7 text-slate-300">
+            <i class="fa-solid fa-shield-halved text-lg text-accent"></i>
+            <h3 class="mt-4 text-base font-semibold text-white">Your data stays under your control</h3>
+            <ul class="mt-4 space-y-3 text-sm leading-relaxed">
+                <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-xs text-accent"></i>
+                    Recognition history is private to your account.
+                </li>
+                <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-xs text-accent"></i>
+                    Passwords are hashed and never stored in plain text.
+                </li>
+                <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-xs text-accent"></i>
+                    Camera frames are processed on the server and immediately discarded &mdash; nothing is recorded.
+                </li>
+                <li class="flex gap-3"><i class="fa-solid fa-check mt-1 text-xs text-accent"></i>
+                    You can delete or export your history at any time.
+                </li>
+            </ul>
+        </div>
+    </aside>
+</div>
+{% endblock %}

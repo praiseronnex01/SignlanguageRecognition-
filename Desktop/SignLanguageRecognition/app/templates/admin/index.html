@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Administration &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Administration{% endblock %}
+{% block mobile_title %}Administration{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-navy">Administration</h2>
+            <p class="mt-1 text-sm text-slate-500">System management, access control and the audit trail.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ url_for('vocabulary.index') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-language"></i> Manage vocabulary
+            </a>
+            <a href="{{ url_for('dataset.index') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-database"></i> Dataset
+            </a>
+            <a href="{{ url_for('training.index') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-brain"></i> Training
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= Overview ================= -->
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="stat-card">
+            <p class="stat-label">User accounts</p>
+            <p class="stat-value" id="ad-users">{{ user_count }}</p>
+            <p class="stat-hint">Registration and role management</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Vocabulary entries</p>
+            <p class="stat-value" id="ad-gestures">{{ gesture_count }}</p>
+            <p class="stat-hint">Candidate and validated MSL signs</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Dataset samples</p>
+            <p class="stat-value" id="ad-samples">{{ sample_count }}</p>
+            <p class="stat-hint">From {{ participant_count }} participant(s)</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Model versions</p>
+            <p class="stat-value" id="ad-models">{{ model_count }}</p>
+            <p class="stat-hint">{{ run_count }} training run(s)</p>
+        </div>
+    </div>
+
+    <!-- ================= Users ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">User management</h3>
+            <div class="flex flex-wrap items-center gap-2">
+                <input type="search" id="ad-user-search" class="form-input !w-56 !py-1.5 text-xs" placeholder="Search name or email">
+                <select id="ad-user-role" class="form-select !w-auto !py-1.5 text-xs">
+                    <option value="">All roles</option>
+                    <option value="admin">Administrators</option>
+                    <option value="user">Standard users</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th class="text-right">Actions</th></tr>
+                </thead>
+                <tbody id="ad-user-rows">
+                    <tr><td colspan="6" class="py-8 text-center text-sm text-slate-400">Loading users…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= Audit log ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">System activity log</h3>
+            <button type="button" id="ad-refresh-logs" class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Action</th><th>Description</th><th>User</th><th>IP address</th><th>When</th></tr>
+                </thead>
+                <tbody id="ad-log-rows">
+                    {% for entry in recent_logs %}
+                    <tr>
+                        <td><span class="badge badge-muted">{{ entry.action }}</span></td>
+                        <td class="max-w-md truncate">{{ entry.description }}</td>
+                        <td class="text-xs text-slate-500">{{ entry.user.email if entry.user else 'system' }}</td>
+                        <td class="text-xs text-slate-500">{{ entry.ip_address or '-' }}</td>
+                        <td class="whitespace-nowrap text-xs text-slate-500">{{ entry.created_at|datetime }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    "use strict";
+
+    const rows = document.getElementById("ad-user-rows");
+    if (!rows) return;
+
+    const searchInput = document.getElementById("ad-user-search");
+    const roleSelect = document.getElementById("ad-user-role");
+    let timer = null;
+
+    async function loadUsers() {
+        const params = new URLSearchParams();
+        params.set("per_page", 50);
+        if (searchInput.value.trim()) params.set("search", searchInput.value.trim());
+        if (roleSelect.value) params.set("role", roleSelect.value);
+
+        try {
+            const response = await window.MSL.api.get("/admin/api/admin/users?" + params.toString());
+            const users = response.users || [];
+            rows.innerHTML = "";
+            if (!users.length) {
+                rows.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-sm text-slate-400">No accounts match the current filters.</td></tr>';
+                return;
+            }
+            users.forEach(function (user) {
+                const row = document.createElement("tr");
+                row.innerHTML =
+                    '<td class="font-medium text-navy">' + window.MSL.escapeHtml(user.full_name) + "</td>" +
+                    "<td>" + window.MSL.escapeHtml(user.email) + "</td>" +
+                    '<td><span class="badge ' + (user.role === "admin" ? "badge-info" : "badge-muted") + '">' + user.role + "</span></td>" +
+                    '<td><span class="badge ' + (user.is_active ? "badge-ok" : "badge-bad") + '">' +
+                    (user.is_active ? "Active" : "Deactivated") + "</span></td>" +
+                    '<td class="whitespace-nowrap text-xs text-slate-500">' + window.MSL.formatDate(user.created_at) + "</td>" +
+                    '<td class="text-right"><div class="flex justify-end gap-2">' +
+                    '<select class="form-select !w-auto !py-1 text-xs js-role-select" data-id="' + user.id + '">' +
+                    '<option value="user"' + (user.role === "user" ? " selected" : "") + ">Standard user</option>" +
+                    '<option value="admin"' + (user.role === "admin" ? " selected" : "") + ">Administrator</option>" +
+                    "</select>" +
+                    '<button type="button" class="btn btn-secondary btn-sm js-toggle-active" data-id="' + user.id + '" ' +
+                    'data-active="' + (user.is_active ? "1" : "0") + '">' +
+                    (user.is_active ? "Deactivate" : "Activate") + "</button>" +
+                    "</div></td>";
+                rows.appendChild(row);
+            });
+
+            rows.querySelectorAll(".js-role-select").forEach(function (select) {
+                select.addEventListener("change", async function () {
+                    try {
+                        await window.MSL.api.put("/admin/api/admin/users/" + select.dataset.id, { role: select.value });
+                        window.MSL.toast("The role was updated.", "ok");
+                        loadUsers();
+                    } catch (error) {
+                        window.MSL.toast(error.message, "bad");
+                        loadUsers();
+                    }
+                });
+            });
+
+            rows.querySelectorAll(".js-toggle-active").forEach(function (button) {
+                button.addEventListener("click", async function () {
+                    const activate = button.dataset.active !== "1";
+                    try {
+                        await window.MSL.api.put("/admin/api/admin/users/" + button.dataset.id, { is_active: activate });
+                        window.MSL.toast("The account was updated.", "ok");
+                        loadUsers();
+                    } catch (error) {
+                        window.MSL.toast(error.message, "bad");
+                    }
+                });
+            });
+        } catch (error) {
+            rows.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-sm text-bad">' +
+                window.MSL.escapeHtml(error.message) + "</td></tr>";
+        }
+    }
+
+    async function loadLogs() {
+        const body = document.getElementById("ad-log-rows");
+        try {
+            const response = await window.MSL.api.get("/admin/api/admin/audit-logs?per_page=25");
+            const logs = response.logs || [];
+            body.innerHTML = "";
+            if (!logs.length) {
+                body.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-400">No activity recorded yet.</td></tr>';
+                return;
+            }
+            logs.forEach(function (entry) {
+                const row = document.createElement("tr");
+                row.innerHTML =
+                    '<td><span class="badge badge-muted">' + window.MSL.escapeHtml(entry.action) + "</span></td>" +
+                    '<td class="max-w-md truncate">' + window.MSL.escapeHtml(entry.description || "") + "</td>" +
+                    '<td class="text-xs text-slate-500">' + window.MSL.escapeHtml(entry.user_email || "system") + "</td>" +
+                    '<td class="text-xs text-slate-500">' + window.MSL.escapeHtml(entry.ip_address || "-") + "</td>" +
+                    '<td class="whitespace-nowrap text-xs text-slate-500">' + window.MSL.formatDateTime(entry.created_at) + "</td>";
+                body.appendChild(row);
+            });
+        } catch (error) {
+            /* keep the server-rendered rows */
+        }
+    }
+
+    searchInput.addEventListener("input", function () {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(loadUsers, 220);
+    });
+    roleSelect.addEventListener("change", loadUsers);
+    document.getElementById("ad-refresh-logs").addEventListener("click", loadLogs);
+
+    loadUsers();
+})();
+</script>
+{% endblock %}

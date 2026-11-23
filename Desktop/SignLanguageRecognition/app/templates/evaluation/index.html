@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% block title %}Model evaluation &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Model evaluation{% endblock %}
+{% block mobile_title %}Model evaluation{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-navy">Model evaluation</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Every figure on this page is read from an evaluation report produced by the training pipeline on a
+                participant-independent test set.
+            </p>
+        </div>
+        <select id="eval-version" class="form-select !w-auto">
+            {% for model in models %}
+            <option value="{{ model.version }}">{{ model.version }} &mdash; {{ model.algorithm|replace('_', ' ')|title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- ================= Headline metrics ================= -->
+    <div id="eval-metrics" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div class="stat-card"><p class="stat-label">Accuracy</p><p class="stat-value" data-metric="accuracy">—</p><p class="stat-hint" data-metric-note="accuracy">Test participants</p></div>
+        <div class="stat-card"><p class="stat-label">Macro precision</p><p class="stat-value" data-metric="precision_macro">—</p><p class="stat-hint">Unweighted mean over classes</p></div>
+        <div class="stat-card"><p class="stat-label">Macro recall</p><p class="stat-value" data-metric="recall_macro">—</p><p class="stat-hint">Unweighted mean over classes</p></div>
+        <div class="stat-card"><p class="stat-label">Macro F1</p><p class="stat-value" data-metric="f1_macro">—</p><p class="stat-hint">Unweighted mean over classes</p></div>
+        <div class="stat-card"><p class="stat-label">Prediction latency</p><p class="stat-value" data-metric="latency">—</p><p class="stat-hint">Mean single-sample time</p></div>
+    </div>
+
+    <!-- ================= Split + threshold ================= -->
+    <div class="grid gap-4 lg:grid-cols-3">
+        <div class="card lg:col-span-2">
+            <div class="card-header">
+                <h3 class="card-title">Participant split</h3>
+                <span class="text-xs text-slate-500">No participant appears in more than one split</span>
+            </div>
+            <div class="card-body">
+                <div id="eval-split" class="grid gap-3 sm:grid-cols-3">
+                    <p class="text-sm text-slate-400">Loading…</p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Rejection threshold</h3>
+            </div>
+            <div class="card-body text-sm">
+                <p class="text-3xl font-bold text-navy" id="eval-threshold">—</p>
+                <p class="mt-1 text-xs text-slate-500">
+                    Derived from the validation participants. Predictions below this value are reported as
+                    &ldquo;Gesture not recognised&rdquo;.
+                </p>
+                <dl id="eval-threshold-detail" class="mt-4 space-y-2 border-t border-line pt-3 text-xs"></dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Confusion matrix ================= -->
+    <div class="grid gap-4 lg:grid-cols-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Confusion matrix</h3>
+                <span class="text-xs text-slate-500">Rows = actual, columns = predicted</span>
+            </div>
+            <div class="card-body">
+                <div class="table-wrap" id="eval-confusion">
+                    <p class="py-8 text-center text-sm text-slate-400">No confusion matrix available.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Per-class precision and recall</h3>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th class="text-right">Support</th></tr>
+                    </thead>
+                    <tbody id="eval-per-class">
+                        <tr><td colspan="5" class="py-8 text-center text-sm text-slate-400">No per-class metrics available.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Model comparison ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Algorithm comparison</h3>
+            <span class="text-xs text-slate-500">Random Forest vs SVM vs KNN on the same split</span>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Schema</th><th>Algorithm</th><th>Accuracy</th><th>Macro precision</th>
+                        <th>Macro recall</th><th>Macro F1</th><th>p95 latency</th>
+                    </tr>
+                </thead>
+                <tbody id="eval-comparison">
+                    <tr><td colspan="7" class="py-8 text-center text-sm text-slate-400">
+                        No comparison report available. Run <code>python -m ml.compare_models</code> to generate one.
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= Classification report ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Classification report</h3>
+            <span class="text-xs text-slate-500">Full sklearn report for the selected version</span>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap" id="eval-report">
+                <p class="py-8 text-center text-sm text-slate-400">No classification report available.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    "use strict";
+
+    const versionSelect = document.getElementById("eval-version");
+    const metricsHost = document.getElementById("eval-metrics");
+    let report = null;
+
+    function setMetric(name, value) {
+        const element = metricsHost.querySelector('[data-metric="' + name + '"]');
+        if (element && value !== null && value !== undefined) element.textContent = value;
+    }
+
+    function renderMetrics(report) {
+        const metrics = (report && report.metrics) || {};
+        setMetric("accuracy", metrics.accuracy !== undefined ? (metrics.accuracy * 100).toFixed(1) + "%" : "—");
+        setMetric("precision_macro", metrics.precision_macro !== undefined ? (metrics.precision_macro * 100).toFixed(1) + "%" : "—");
+        setMetric("recall_macro", metrics.recall_macro !== undefined ? (metrics.recall_macro * 100).toFixed(1) + "%" : "—");
+        setMetric("f1_macro", metrics.f1_macro !== undefined ? (metrics.f1_macro * 100).toFixed(1) + "%" : "—");
+        setMetric("latency", metrics.latency_mean_ms !== undefined ? metrics.latency_mean_ms.toFixed(2) + " ms" : "—");
+    }
+
+    function renderSplit(report) {
+        const host = document.getElementById("eval-split");
+        const split = (report && report.split) || {};
+        if (!split.train_participants) {
+            host.innerHTML = '<p class="text-sm text-slate-400">No split information available.</p>';
+            return;
+        }
+        const blocks = [
+            { title: "Training", list: split.train_participants, tone: "text-accent" },
+            { title: "Validation", list: split.validation_participants, tone: "text-warn" },
+            { title: "Test (held out)", list: split.test_participants, tone: "text-ok" }
+        ];
+        host.innerHTML = "";
+        blocks.forEach(function (block) {
+            const list = (block.list || []).join(", ") || "none";
+            const div = document.createElement("div");
+            div.className = "rounded-lg border border-line p-4";
+            div.innerHTML =
+                '<p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">' + block.title + "</p>" +
+                '<p class="mt-2 break-words text-sm font-medium ' + block.tone + '">' + window.MSL.escapeHtml(list) + "</p>" +
+                '<p class="mt-1 text-[11px] text-slate-400">' + ((block.list || []).length) + " participant(s)</p>";
+            host.appendChild(div);
+        });
+    }
+
+    function renderThreshold(report) {
+        const element = document.getElementById("eval-threshold");
+        const detail = document.getElementById("eval-threshold-detail");
+        const threshold = report ? report.rejection_threshold : null;
+        element.textContent = threshold !== null && threshold !== undefined ? Number(threshold).toFixed(2) : "—";
+
+        const info = (report && report.threshold_analysis) || {};
+        detail.innerHTML = "";
+        const rows = [
+            ["True acceptance", info.true_acceptance !== undefined ? (info.true_acceptance * 100).toFixed(1) + "%" : "—"],
+            ["False acceptance", info.false_acceptance !== undefined ? (info.false_acceptance * 100).toFixed(1) + "%" : "—"],
+            ["Macro F1 at threshold", info.macro_f1_at_threshold !== undefined ? (info.macro_f1_at_threshold * 100).toFixed(1) + "%" : "—"],
+            ["Selection rule", info.reason || "—"]
+        ];
+        rows.forEach(function (row) {
+            const line = document.createElement("div");
+            line.className = "flex items-start justify-between gap-3";
+            line.innerHTML =
+                '<span class="text-slate-500">' + row[0] + "</span>" +
+                '<span class="text-right font-medium text-navy">' + window.MSL.escapeHtml(String(row[1])) + "</span>";
+            detail.appendChild(line);
+        });
+    }
+
+    function renderConfusion(report) {
+        const host = document.getElementById("eval-confusion");
+        const matrix = report && report.confusion_matrix;
+        if (!matrix || !matrix.labels || !matrix.labels.length) {
+            host.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">No confusion matrix available.</p>';
+            return;
+        }
+        const labels = matrix.labels;
+        let html = '<table class="data-table"><thead><tr><th>Actual \\ Predicted</th>';
+        labels.forEach(function (label) {
+            html += "<th>" + window.MSL.escapeHtml(label) + "</th>";
+        });
+        html += "</tr></thead><tbody>";
+        matrix.matrix.forEach(function (row, rowIndex) {
+            html += "<tr><td class='font-medium text-navy'>" + window.MSL.escapeHtml(labels[rowIndex]) + "</td>";
+            row.forEach(function (value, columnIndex) {
+                const isDiagonal = rowIndex === columnIndex;
+                const background = isDiagonal ? "bg-accent-soft" : "";
+                html += '<td class="text-center ' + background + '">' + value + "</td>";
+            });
+            html += "</tr>";
+        });
+        html += "</tbody></table>";
+        host.innerHTML = html;
+    }
+
+    function renderPerClass(report) {
+        const body = document.getElementById("eval-per-class");
+        const perClass = (report && report.per_class) || {};
+        const entries = Object.keys(perClass);
+        if (!entries.length) {
+            body.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-400">No per-class metrics available.</td></tr>';
+            return;
+        }
+        body.innerHTML = "";
+        entries.forEach(function (label) {
+            const data = perClass[label];
+            const row = document.createElement("tr");
+            row.innerHTML =
+                '<td class="font-medium text-navy">' + window.MSL.escapeHtml(label) + "</td>" +
+                "<td>" + (data.precision * 100).toFixed(1) + "%</td>" +
+                "<td>" + (data.recall * 100).toFixed(1) + "%</td>" +
+                "<td>" + (data.f1_score * 100).toFixed(1) + "%</td>" +
+                '<td class="text-right">' + data.support + "</td>";
+            body.appendChild(row);
+        });
+    }
+
+    function renderReport(report) {
+        const host = document.getElementById("eval-report");
+        const raw = report && report.classification_report;
+        if (!raw) {
+            host.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">No classification report available.</p>';
+            return;
+        }
+        const classes = Object.keys(raw).filter(function (key) {
+            return key !== "accuracy" && key !== "macro avg" && key !== "weighted avg";
+        });
+        let html = '<table class="data-table"><thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th class="text-right">Support</th></tr></thead><tbody>';
+        classes.forEach(function (label) {
+            const data = raw[label];
+            html += '<tr><td class="font-medium text-navy">' + window.MSL.escapeHtml(label) + "</td>" +
+                "<td>" + Number(data.precision).toFixed(3) + "</td>" +
+                "<td>" + Number(data.recall).toFixed(3) + "</td>" +
+                "<td>" + Number(data["f1-score"]).toFixed(3) + "</td>" +
+                '<td class="text-right">' + data.support + "</td></tr>";
+        });
+        ["macro avg", "weighted avg"].forEach(function (key) {
+            if (!raw[key]) return;
+            const data = raw[key];
+            html += '<tr class="bg-surface"><td class="font-semibold text-navy">' + key + "</td>" +
+                "<td>" + Number(data.precision).toFixed(3) + "</td>" +
+                "<td>" + Number(data.recall).toFixed(3) + "</td>" +
+                "<td>" + Number(data["f1-score"]).toFixed(3) + "</td>" +
+                '<td class="text-right">' + data.support + "</td></tr>";
+        });
+        html += "</tbody></table>";
+        html += '<p class="mt-3 text-xs text-slate-500">Overall accuracy: <strong class="text-navy">' +
+            Number(raw.accuracy).toFixed(4) + "</strong></p>";
+        host.innerHTML = html;
+    }
+
+    async function loadComparison() {
+        const body = document.getElementById("eval-comparison");
+        try {
+            const response = await window.MSL.api.get("/evaluation/api/evaluation/compare");
+            const comparison = response.comparison;
+            if (!comparison) {
+                body.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-sm text-slate-400">' +
+                    window.MSL.escapeHtml(response.message || "No comparison report available.") + "</td></tr>";
+                return;
+            }
+            body.innerHTML = "";
+            Object.keys(comparison.results || {}).forEach(function (schema) {
+                const entries = comparison.results[schema];
+                Object.keys(entries).forEach(function (algorithm) {
+                    const data = entries[algorithm];
+                    const metrics = data.metrics || {};
+                    const latency = (data.latency || {}).p95_ms;
+                    const row = document.createElement("tr");
+                    row.innerHTML =
+                        "<td>" + window.MSL.escapeHtml(schema) + "</td>" +
+                        '<td class="font-medium text-navy">' + window.MSL.escapeHtml(data.label || algorithm) + "</td>" +
+                        "<td>" + ((metrics.accuracy || 0) * 100).toFixed(1) + "%</td>" +
+                        "<td>" + ((metrics.precision_macro || 0) * 100).toFixed(1) + "%</td>" +
+                        "<td>" + ((metrics.recall_macro || 0) * 100).toFixed(1) + "%</td>" +
+                        "<td>" + ((metrics.f1_macro || 0) * 100).toFixed(1) + "%</td>" +
+                        "<td>" + (latency !== undefined ? Number(latency).toFixed(2) + " ms" : "—") + "</td>";
+                    body.appendChild(row);
+                });
+            });
+        } catch (error) {
+            body.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-sm text-slate-400">' +
+                window.MSL.escapeHtml(error.message) + "</td></tr>";
+        }
+    }
+
+    async function loadReport(version) {
+        try {
+            let data = null;
+            if (version) {
+                const response = await window.MSL.api.get(
+                    "/evaluation/api/evaluation/report/" + encodeURIComponent(version)
+                );
+                data = response.report;
+            } else {
+                const response = await window.MSL.api.get("/evaluation/api/evaluation/latest");
+                data = (response && response.report) || null;
+            }
+            report = data;
+            if (!report) {
+                renderMetrics(null);
+                renderSplit(null);
+                renderThreshold(null);
+                renderConfusion(null);
+                renderPerClass(null);
+                renderReport(null);
+                return;
+            }
+            renderMetrics(report);
+            renderSplit(report);
+            renderThreshold(report);
+            renderConfusion(report);
+            renderPerClass(report);
+            renderReport(report);
+        } catch (error) {
+            window.MSL.toast(error.message, "bad");
+        }
+    }
+
+    versionSelect.addEventListener("change", function () {
+        loadReport(versionSelect.value);
+    });
+
+    loadReport(versionSelect.value || "");
+    loadComparison();
+})();
+</script>
+{% endblock %}

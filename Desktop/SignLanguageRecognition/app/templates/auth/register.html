@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Create an account &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Register{% endblock %}
+{% block mobile_title %}Create an account{% endblock %}
+
+{% block content %}
+<div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2 lg:items-start">
+
+    <div class="card p-6 sm:p-8">
+        <h2 class="text-lg font-semibold text-navy">Create your account</h2>
+        <p class="mt-1 text-sm text-slate-500">Registration is required to use live recognition and save history.</p>
+
+        <form method="post" class="mt-6 space-y-4" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div>
+                {{ form.full_name.label(class="form-label") }}
+                {{ form.full_name(class="form-input", placeholder="Your full name", autocomplete="name") }}
+                {% for error in form.full_name.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div>
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-input", placeholder="you@example.com", autocomplete="email") }}
+                {% for error in form.email.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div>
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input", placeholder="At least 8 characters", autocomplete="new-password") }}
+                <p class="form-help">Use at least eight characters including a letter and a number.</p>
+                {% for error in form.password.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div>
+                {{ form.confirm_password.label(class="form-label") }}
+                {{ form.confirm_password(class="form-input", placeholder="Repeat your password", autocomplete="new-password") }}
+                {% for error in form.confirm_password.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <label class="flex items-start gap-2 text-sm text-navy-muted">
+                {{ form.accept_terms(class="mt-0.5 h-4 w-4 rounded border-line text-accent focus:ring-accent") }}
+                <span>{{ form.accept_terms.label.text }}</span>
+            </label>
+            {% for error in form.accept_terms.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+
+            {{ form.submit(class="btn btn-primary btn-block btn-lg") }}
+        </form>
+
+        <p class="mt-6 border-t border-line pt-5 text-center text-sm text-slate-500">
+            Already registered?
+            <a href="{{ url_for('auth.login_page') }}" class="font-medium text-accent hover:underline">Sign in</a>
+        </p>
+    </div>
+
+    <aside class="space-y-4">
+        <div class="card p-6">
+            <h3 class="text-sm font-semibold text-navy">What you can do as a registered user</h3>
+            <ul class="mt-4 space-y-3 text-sm leading-relaxed text-navy-muted">
+                <li class="flex gap-3"><i class="fa-solid fa-video mt-1 text-xs text-accent"></i> Use the live webcam recogniser with a visible confidence score.</li>
+                <li class="flex gap-3"><i class="fa-solid fa-language mt-1 text-xs text-accent"></i> Browse the validated MSL vocabulary with descriptions and references.</li>
+                <li class="flex gap-3"><i class="fa-solid fa-clock-rotate-left mt-1 text-xs text-accent"></i> Search, filter and export your personal recognition history.</li>
+                <li class="flex gap-3"><i class="fa-solid fa-user mt-1 text-xs text-accent"></i> Update your profile details at any time.</li>
+            </ul>
+        </div>
+        <div class="card border-l-4 border-l-accent p-6">
+            <h3 class="text-sm font-semibold text-navy">About the dataset</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-muted">
+                Dataset collection is restricted to administrators and uses anonymous participant codes only.
+                Consent is recorded before any sample may be captured and raw camera footage is never stored.
+            </p>
+        </div>
+    </aside>
+</div>
+{% endblock %}

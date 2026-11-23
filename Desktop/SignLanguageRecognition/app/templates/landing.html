@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}{{ project_name }}{% endblock %}
+{% block description %}Recognise static Malawi Sign Language gestures in real time using MediaPipe hand landmarks and a Random Forest classifier.{% endblock %}
+
+{% block body %}
+<div class="min-h-full bg-white">
+
+    <!-- ================= Public header ================= -->
+    <header class="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
+        <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+            <a href="{{ url_for('landing.index') }}" class="flex items-center gap-3">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-navy text-white">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                </span>
+                <span class="leading-tight">
+                    <span class="block text-sm font-semibold text-navy">MSL Recognition</span>
+                    <span class="block text-[11px] text-slate-500">Computer vision &amp; machine learning</span>
+                </span>
+            </a>
+
+            <nav class="ml-auto hidden items-center gap-7 text-sm font-medium text-navy-muted md:flex">
+                <a href="#how-it-works" class="hover:text-accent">How it works</a>
+                <a href="#features" class="hover:text-accent">Features</a>
+                <a href="#how-to-use" class="hover:text-accent">How to use</a>
+                <a href="#limitations" class="hover:text-accent">Limitations</a>
+            </nav>
+
+            <div class="ml-auto flex items-center gap-2 md:ml-0">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">Open dashboard</a>
+                {% else %}
+                <a href="{{ url_for('auth.login_page') }}" class="btn btn-secondary">Sign in</a>
+                <a href="{{ url_for('auth.register_page') }}" class="btn btn-primary">Create account</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= Hero ================= -->
+    <section class="border-b border-line bg-surface">
+        <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-20">
+            <div>
+                <span class="badge badge-info">
+                    <i class="fa-solid fa-flask"></i> Academic prototype &mdash; final-year project
+                </span>
+                <h1 class="mt-4 text-3xl font-bold leading-tight text-navy sm:text-4xl">
+                    AI-Based Malawi Sign Language Recognition Using Computer Vision and Machine Learning
+                </h1>
+                <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-navy-muted">
+                    This system recognises a verified set of <strong>static Malawi Sign Language (MSL) gestures</strong>
+                    from a standard webcam. MediaPipe extracts 21 hand landmarks per hand, the landmarks are
+                    normalised into a fixed feature vector, and a trained Random Forest classifier returns the
+                    sign together with a confidence score.
+                </p>
+                <div class="mt-7 flex flex-wrap items-center gap-3">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('recognition.index') }}" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-video"></i> Start live recognition
+                    </a>
+                    <a href="{{ url_for('vocabulary.index') }}" class="btn btn-secondary btn-lg">
+                        <i class="fa-solid fa-language"></i> Browse the vocabulary
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('auth.register_page') }}" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-user-plus"></i> Create a free account
+                    </a>
+                    <a href="{{ url_for('auth.login_page') }}" class="btn btn-secondary btn-lg">
+                        <i class="fa-solid fa-right-to-bracket"></i> Sign in
+                    </a>
+                    {% endif %}
+                </div>
+                <p class="mt-5 flex items-start gap-2 text-xs leading-relaxed text-slate-500">
+                    <i class="fa-solid fa-circle-info mt-0.5 text-accent"></i>
+                    Recognition is only possible for signs that an administrator has verified with a competent
+                    Malawi Sign Language signer. No sign is ever marked as validated automatically.
+                </p>
+            </div>
+
+            <!-- Pipeline illustration -->
+            <div class="card p-5">
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Recognition pipeline</p>
+                <ol class="mt-4 space-y-3">
+                    {% set steps = [
+                        ('fa-camera', 'Capture', 'A webcam frame is grabbed from the browser and compressed to JPEG.'),
+                        ('fa-hand-pointer', 'Detect hands', 'MediaPipe Hand Landmarker locates up to two hands and 21 landmarks each.'),
+                        ('fa-ruler-combined', 'Normalise', 'Landmarks are translated to the wrist and scaled by a palm reference.'),
+                        ('fa-brain', 'Classify', 'The feature vector is scored by the published Random Forest model.'),
+                        ('fa-language', 'Translate', 'The recognised sign is mapped to its approved English meaning.')
+                    ] %}
+                    {% for icon, title, text in steps %}
+                    <li class="flex gap-3">
+                        <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
+                            <i class="fa-solid {{ icon }} text-xs"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-navy">{{ title }}</p>
+                            <p class="text-xs leading-relaxed text-slate-500">{{ text }}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= How it works ================= -->
+    <section id="how-it-works" class="scroll-mt-20 border-b border-line bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+            <h2 class="text-2xl font-bold text-navy">How the recognition works</h2>
+            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-muted">
+                The system separates data collection from real-time inference so that the exact same feature
+                representation is used in both stages.
+            </p>
+
+            <div class="mt-8 grid gap-5 md:grid-cols-3">
+                <article class="card p-5">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                        <i class="fa-solid fa-database"></i>
+                    </span>
+                    <h3 class="mt-4 text-base font-semibold text-navy">1. Labelled dataset collection</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-navy-muted">
+                        Administrators record samples from anonymous participants. For each captured frame only the
+                        extracted hand landmarks and their metadata are stored &mdash; never the raw video. Consent is
+                        recorded per participant before collection is allowed.
+                    </p>
+                </article>
+                <article class="card p-5">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </span>
+                    <h3 class="mt-4 text-base font-semibold text-navy">2. Participant-independent training</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-navy-muted">
+                        Frames from the same participant are never split across training and testing data. Roughly
+                        70% of participants train the model, 15% tune it and the final 15% are held out as an
+                        independent test set.
+                    </p>
+                </article>
+                <article class="card p-5">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                        <i class="fa-solid fa-check-double"></i>
+                    </span>
+                    <h3 class="mt-4 text-base font-semibold text-navy">3. Calibrated inference</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-navy-muted">
+                        A validation-derived confidence threshold rejects uncertain frames. Predictions below the
+                        threshold are reported as &ldquo;Gesture not recognised&rdquo; instead of being forced into a class.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= Features ================= -->
+    <section id="features" class="scroll-mt-20 border-b border-line bg-surface">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+            <h2 class="text-2xl font-bold text-navy">Main features</h2>
+            <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {% set features = [
+                    ('fa-video', 'Live webcam recognition', 'Continuous recognition at 5&ndash;8 frames per second with a single in-flight request and server-side landmark overlay.'),
+                    ('fa-hand-sparkles', 'One-hand and two-hand signs', '63 features for one-hand signs and 128 features for two-hand signs, with an explicit missing-hand mask.'),
+                    ('fa-language', 'Verified vocabulary management', 'Administrators add, edit, validate and deactivate MSL signs. Validation is always an explicit human decision.'),
+                    ('fa-brain', 'Model comparison', 'Random Forest, Support Vector Machine and K-Nearest Neighbours are trained on the same participant split and compared on real metrics.'),
+                    ('fa-clock-rotate-left', 'Recognition history', 'Every confirmed sign is stored with its confidence, date and model version, and can be searched, filtered and exported to CSV.'),
+                    ('fa-shield-halved', 'Role-based access control', 'Administrators manage users, data, models and training runs. Regular users use recognition and inspect their own history.'),
+                    ('fa-file-lines', 'Reproducible artefacts', 'Every model version records its label encoder, feature schema, evaluation report, dataset version and feature version.'),
+                    ('fa-users', 'Privacy by design', 'Participants are referenced only by an anonymous code and consent is recorded before any sample can be captured.')
+                ] %}
+                {% for icon, title, text in features %}
+                <article class="card p-5">
+                    <i class="fa-solid {{ icon }} text-lg text-accent"></i>
+                    <h3 class="mt-3 text-sm font-semibold text-navy">{{ title }}</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-navy-muted">{{ text }}</p>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= How to use ================= -->
+    <section id="how-to-use" class="scroll-mt-20 border-b border-line bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+            <h2 class="text-2xl font-bold text-navy">How to use the application</h2>
+            <ol class="mt-8 grid gap-5 md:grid-cols-4">
+                {% set steps = [
+                    ('Create an account', 'Register with an email address and a password of at least eight characters containing a letter and a number.'),
+                    ('Allow camera access', 'The browser asks for camera permission the first time the recognition page is opened. Nothing is uploaded until you start.'),
+                    ('Start recognition', 'Press <em>Start camera</em>, then <em>Start recognition</em>. Hold the sign steady in front of the camera.'),
+                    ('Review and save', 'A confirmed sign appears with its English meaning and confidence. Press <em>Save to history</em> to keep the record.')
+                ] %}
+                {% for title, text in steps %}
+                <li class="card p-5">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-navy text-sm font-semibold text-white">{{ loop.index }}</span>
+                    <h3 class="mt-3 text-sm font-semibold text-navy">{{ title }}</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-navy-muted">{{ text|safe }}</p>
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+
+    <!-- ================= Limitations ================= -->
+    <section id="limitations" class="scroll-mt-20 border-b border-line bg-surface">
+        <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+            <div class="card border-l-4 border-l-warn p-6">
+                <h2 class="flex items-center gap-2 text-lg font-semibold text-navy">
+                    <i class="fa-solid fa-triangle-exclamation text-warn"></i>
+                    Scope and limitations
+                </h2>
+                <ul class="mt-4 space-y-2.5 text-sm leading-relaxed text-navy-muted">
+                    <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-xs text-warn"></i>
+                        The system recognises <strong>individual static gestures only</strong>. It does not recognise sentences, dynamic sign sequences or facial expressions.
+                    </li>
+                    <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-xs text-warn"></i>
+                        Only signs suitable for static hand-pose recognition are included in the vocabulary. Signs that depend on movement or body posture are out of scope.
+                    </li>
+                    <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-xs text-warn"></i>
+                        The supported vocabulary is deliberately small and grows only after verification by competent Malawi Sign Language signers.
+                    </li>
+                    <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-xs text-warn"></i>
+                        Accuracy depends on the amount and diversity of the collected dataset. Published metrics are always computed from a held-out participant test set.
+                    </li>
+                    <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-xs text-warn"></i>
+                        Recognition is a research prototype and must not be relied upon for safety-critical communication.
+                    </li>
+                </ul>
+                <p class="mt-5 border-t border-line pt-4 text-xs leading-relaxed text-slate-500">
+                    Sign descriptions in this system are placeholders for the vocabulary management workflow. They must be
+                    reviewed and confirmed against the
+                    <a href="{{ msl_reference_url }}" target="_blank" rel="noopener noreferrer" class="font-medium text-accent hover:underline">Malawian Sign Language Dictionary</a>
+                    and with qualified signers before the corresponding sign is marked as validated.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= Footer ================= -->
+    <footer class="bg-navy text-slate-400">
+        <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white">
+                            <i class="fa-solid fa-hand-sparkles"></i>
+                        </span>
+                        <span class="text-sm font-semibold text-white">MSL Recognition System</span>
+                    </div>
+                    <p class="mt-3 max-w-md text-xs leading-relaxed">
+                        AI-Based Malawi Sign Language Recognition System Using Computer Vision and Machine Learning.
+                        Final-year Computer Science project.
+                    </p>
+                </div>
+                <div class="text-xs">
+                    <p class="font-semibold text-slate-200">Resources</p>
+                    <ul class="mt-2 space-y-1.5">
+                        <li><a href="{{ msl_reference_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-white">Malawian Sign Language Dictionary</a></li>
+                        <li><a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" rel="noopener noreferrer" class="hover:text-white">MediaPipe Hand Landmarker</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="mt-8 border-t border-white/10 pt-5 text-[11px]">
+                &copy; {{ current_year }} {{ project_name }}. No participant video is stored by this application.
+            </p>
+        </div>
+    </footer>
+</div>
+{% endblock %}

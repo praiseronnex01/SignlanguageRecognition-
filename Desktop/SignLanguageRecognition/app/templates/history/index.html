@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}Recognition history &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Recognition history{% endblock %}
+{% block mobile_title %}Recognition history{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-navy">Recognition history</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Every confirmed sign that you saved, with its confidence and the model version that produced it.
+            </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ url_for('history.api_export') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+            </a>
+            <button type="button" id="btn-clear-history" class="btn btn-danger">
+                <i class="fa-solid fa-trash"></i> Clear history
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= Filters ================= -->
+    <div class="card">
+        <form method="get" class="card-body grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <label for="search" class="form-label">Search</label>
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="search" id="search" name="search" class="form-input pl-9"
+                           value="{{ search }}" placeholder="Gesture or English meaning">
+                </div>
+            </div>
+            <div>
+                <label for="date_from" class="form-label">From</label>
+                <input type="date" id="date_from" name="date_from" class="form-input" value="{{ date_from }}">
+            </div>
+            <div>
+                <label for="date_to" class="form-label">To</label>
+                <input type="date" id="date_to" name="date_to" class="form-input" value="{{ date_to }}">
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-filter"></i> Apply
+                </button>
+                <a href="{{ url_for('history.index') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- ================= Table ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Saved recognitions</h3>
+            <span class="badge badge-muted">{{ pagination.total }} record(s)</span>
+        </div>
+
+        {% if entries %}
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Gesture</th><th>English meaning</th><th>Confidence</th>
+                        <th>Model version</th><th>Date</th><th>Time</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td class="font-medium text-navy">{{ entry.gesture.label if entry.gesture else 'Unknown' }}</td>
+                        <td>{{ entry.translation or (entry.gesture.english_meaning if entry.gesture else '-') }}</td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <div class="h-1.5 w-16 overflow-hidden rounded-full bg-surface">
+                                    <div class="h-full rounded-full bg-accent" style="width: {{ (entry.confidence * 100)|round(0, 'floor')|int }}%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-navy">{{ '%.0f'|format(entry.confidence * 100) }}%</span>
+                            </div>
+                        </td>
+                        <td class="text-xs text-slate-500">{{ entry.model_version.version if entry.model_version else '-' }}</td>
+                        <td class="whitespace-nowrap text-slate-500">{{ entry.created_at|datetime('%d %b %Y') }}</td>
+                        <td class="whitespace-nowrap text-slate-500">{{ entry.created_at|datetime('%H:%M:%S') }}</td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-secondary btn-sm js-delete-entry" data-id="{{ entry.id }}">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-xs text-slate-500">
+                Page {{ pagination.page }} of {{ pagination.pages }} &middot; {{ pagination.total }} record(s)
+            </p>
+            <div class="flex items-center gap-2">
+                {% if pagination.has_prev %}
+                <a href="{{ url_for('history.index', page=pagination.prev_num, search=search, date_from=date_from, date_to=date_to) }}"
+                   class="btn btn-secondary btn-sm"><i class="fa-solid fa-chevron-left"></i> Previous</a>
+                {% endif %}
+                {% if pagination.has_next %}
+                <a href="{{ url_for('history.index', page=pagination.next_num, search=search, date_from=date_from, date_to=date_to) }}"
+                   class="btn btn-secondary btn-sm">Next <i class="fa-solid fa-chevron-right"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="card-body py-14 text-center">
+            <i class="fa-solid fa-inbox text-2xl text-slate-300"></i>
+            <p class="mt-3 text-sm font-medium text-navy">No recognition history yet</p>
+            <p class="mt-1 text-xs text-slate-500">
+                Use the live recognition page and press <em>Save to history</em> to keep a confirmed sign.
+            </p>
+            <a href="{{ url_for('recognition.index') }}" class="btn btn-primary mt-4">
+                <i class="fa-solid fa-video"></i> Open live recognition
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    "use strict";
+
+    document.querySelectorAll(".js-delete-entry").forEach(function (button) {
+        button.addEventListener("click", async function () {
+            if (!window.confirm("Delete this history entry?")) return;
+            try {
+                await window.MSL.api.del("/history/api/history/" + button.dataset.id);
+                window.MSL.toast("The entry was deleted.", "ok");
+                window.setTimeout(function () { window.location.reload(); }, 400);
+            } catch (error) {
+                window.MSL.toast(error.message, "bad");
+            }
+        });
+    });
+
+    const clearButton = document.getElementById("btn-clear-history");
+    if (clearButton) {
+        clearButton.addEventListener("click", async function () {
+            if (!window.confirm("Delete every record in your recognition history? This cannot be undone.")) return;
+            try {
+                const response = await window.MSL.api.del("/history/api/history");
+                window.MSL.toast(response.message || "Your history was cleared.", "ok");
+                window.setTimeout(function () { window.location.reload(); }, 500);
+            } catch (error) {
+                window.MSL.toast(error.message, "bad");
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}

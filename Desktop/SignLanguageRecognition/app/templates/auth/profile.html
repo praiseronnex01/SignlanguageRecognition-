@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}My profile &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}My profile{% endblock %}
+{% block mobile_title %}My profile{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl space-y-6">
+
+    <div class="card p-6">
+        <div class="flex items-start gap-4">
+            <span class="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-lg font-semibold text-accent-dark">
+                {{ current_user.full_name[:1]|upper }}
+            </span>
+            <div class="min-w-0">
+                <h2 class="text-lg font-semibold text-navy">{{ current_user.full_name }}</h2>
+                <p class="text-sm text-slate-500">{{ current_user.email }}</p>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <span class="badge {% if current_user.is_admin %}badge-info{% else %}badge-muted{% endif %}">
+                        <i class="fa-solid {% if current_user.is_admin %}fa-shield-halved{% else %}fa-user{% endif %}"></i>
+                        {{ 'Administrator' if current_user.is_admin else 'Standard user' }}
+                    </span>
+                    <span class="badge {% if current_user.is_active %}badge-ok{% else %}badge-bad{% endif %}">
+                        {{ 'Active' if current_user.is_active else 'Deactivated' }}
+                    </span>
+                    <span class="badge badge-muted">Joined {{ current_user.created_at|datetime('%d %b %Y') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Profile details</h3>
+        </div>
+        <form method="post" class="card-body space-y-4" novalidate>
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.full_name.label(class="form-label") }}
+                {{ form.full_name(class="form-input") }}
+                {% for error in form.full_name.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                <span class="form-label">Email address</span>
+                <input type="email" class="form-input bg-surface" value="{{ current_user.email }}" disabled>
+                <p class="form-help">Contact an administrator to change your email address.</p>
+            </div>
+            <div class="flex justify-end">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Security</h3>
+        </div>
+        <div class="card-body space-y-3 text-sm text-navy-muted">
+            <p class="flex items-start gap-3">
+                <i class="fa-solid fa-lock mt-0.5 text-ok"></i>
+                Your password is stored as a salted hash. It is never written to the database in plain text.
+            </p>
+            <p class="flex items-start gap-3">
+                <i class="fa-solid fa-shield-halved mt-0.5 text-accent"></i>
+                Every state-changing request is protected with a CSRF token.
+            </p>
+            <p class="flex items-start gap-3">
+                <i class="fa-solid fa-right-from-bracket mt-0.5 text-slate-400"></i>
+                <a href="{{ url_for('auth.logout') }}" class="font-medium text-accent hover:underline">Sign out of this device</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

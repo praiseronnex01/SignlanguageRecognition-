@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+{% block title %}Live recognition &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Live recognition{% endblock %}
+{% block mobile_title %}Live recognition{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-navy">Live MSL gesture recognition</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Frames are captured in the browser and classified on the server. Nothing is recorded.
+            </p>
+        </div>
+        <div id="model-badge" class="flex flex-wrap items-center gap-2 text-xs">
+            {% if has_model %}
+                {% for model in model_versions %}
+                <span class="badge badge-info"><i class="fa-solid fa-cube"></i> Model {{ model.version }}</span>
+                {% endfor %}
+                <span class="badge badge-muted">Threshold {{ '%.0f'|format(confidence_threshold * 100) }}%</span>
+            {% else %}
+                <span class="badge badge-warn"><i class="fa-solid fa-triangle-exclamation"></i> No published model</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not has_model %}
+    <div class="card border-l-4 border-l-warn p-4">
+        <p class="flex items-start gap-3 text-sm text-navy-muted">
+            <i class="fa-solid fa-circle-info mt-0.5 text-warn"></i>
+            <span>
+                Live recognition is disabled because no model has been published yet. Validated MSL samples must be
+                collected and a model trained and published before signs can be recognised.
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('training.index') }}" class="font-medium text-accent hover:underline">Open the training module</a>.
+                {% endif %}
+            </span>
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="grid gap-5 xl:grid-cols-5">
+
+        <!-- ================= Camera ================= -->
+        <div class="xl:col-span-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Camera</h3>
+                    <div id="camera-status" class="flex items-center gap-2 text-xs text-slate-500">
+                        <span class="inline-flex h-2 w-2 rounded-full bg-slate-300"></span>
+                        <span>Camera off</span>
+                    </div>
+                </div>
+
+                <div class="card-body space-y-4">
+                    <div class="video-shell">
+                        <video id="camera-video" playsinline muted></video>
+                        <canvas id="overlay-canvas"></canvas>
+
+                        <div id="camera-placeholder" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-navy text-center">
+                            <i class="fa-solid fa-video text-3xl text-slate-600"></i>
+                            <p class="px-6 text-sm text-slate-400">
+                                The camera preview appears here once you start it.
+                            </p>
+                        </div>
+
+                        <div id="recognition-overlay"
+                             class="pointer-events-none absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-navy/90 to-transparent p-4">
+                            <p id="overlay-gesture" class="text-xl font-bold text-white">&mdash;</p>
+                            <p id="overlay-meaning" class="text-sm text-slate-300">Waiting for a sign</p>
+                            <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+                                <div id="overlay-confidence-bar" class="h-full rounded-full bg-accent" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" id="btn-start-camera" class="btn btn-dark">
+                            <i class="fa-solid fa-play"></i> Start camera
+                        </button>
+                        <button type="button" id="btn-stop-camera" class="btn btn-secondary" disabled>
+                            <i class="fa-solid fa-stop"></i> Stop camera
+                        </button>
+                        <button type="button" id="btn-start-recognition" class="btn btn-primary" disabled>
+                            <i class="fa-solid fa-hand-pointer"></i> Start recognition
+                        </button>
+                        <button type="button" id="btn-pause-recognition" class="btn btn-secondary" disabled>
+                            <i class="fa-solid fa-pause"></i> Pause
+                        </button>
+                        <button type="button" id="btn-clear-result" class="btn btn-ghost" disabled>
+                            <i class="fa-solid fa-eraser"></i> Clear result
+                        </button>
+                        <button type="button" id="btn-save-result" class="btn btn-success" disabled>
+                            <i class="fa-solid fa-floppy-disk"></i> Save to history
+                        </button>
+                    </div>
+
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <div>
+                            <label for="camera-select" class="form-label">Camera device</label>
+                            <select id="camera-select" class="form-select" disabled>
+                                <option value="">Default camera</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="overlay-toggle" class="form-label">Landmark overlay</label>
+                            <div class="flex h-[38px] items-center gap-2">
+                                <input type="checkbox" id="overlay-toggle" class="h-4 w-4 rounded border-line text-accent focus:ring-accent" checked>
+                                <span class="text-sm text-navy-muted">Draw the detected hand skeleton</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="camera-message" class="hidden rounded-md border border-line bg-surface px-4 py-3 text-sm text-navy-muted"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Recognition panel ================= -->
+        <div class="space-y-5 xl:col-span-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recognition result</h3>
+                    <span id="result-state" class="badge badge-muted">Idle</span>
+                </div>
+                <div class="card-body">
+                    <div class="rounded-lg border border-line bg-surface p-5 text-center">
+                        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Recognised MSL gesture</p>
+                        <p id="result-gesture" class="mt-2 text-2xl font-bold text-navy">&mdash;</p>
+                        <p id="result-meaning" class="mt-1 text-sm text-slate-500">Start the camera to begin</p>
+
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-xs text-slate-500">
+                                <span>Confidence</span>
+                                <span id="result-confidence-value">0%</span>
+                            </div>
+                            <div class="confidence-track mt-1.5">
+                                <div id="result-confidence-bar" class="confidence-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <dl class="mt-4 space-y-2.5 text-sm">
+                        <div class="flex items-center justify-between">
+                            <dt class="text-slate-500">Hand detected</dt>
+                            <dd id="result-hand" class="font-medium text-navy">No</dd>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <dt class="text-slate-500">Model version</dt>
+                            <dd id="result-model" class="font-medium text-navy">&mdash;</dd>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <dt class="text-slate-500">Response time</dt>
+                            <dd id="result-latency" class="font-medium text-navy">&mdash;</dd>
+                        </div>
+                    </dl>
+
+                    <p id="result-message" class="mt-4 hidden rounded-md border border-line bg-white px-3.5 py-2.5 text-xs leading-relaxed text-navy-muted"></p>
+                </div>
+            </div>
+
+            <!-- Supported vocabulary -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Supported signs</h3>
+                    <span class="badge badge-muted">{{ supported_gestures|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if supported_gestures %}
+                    <ul class="divide-y divide-line">
+                        {% for gesture in supported_gestures %}
+                        <li class="flex items-center justify-between gap-3 py-2.5">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-navy">{{ gesture.label }}</p>
+                                <p class="truncate text-xs text-slate-500">{{ gesture.english_meaning }}</p>
+                            </div>
+                            <span class="badge badge-muted shrink-0">
+                                {{ gesture.hand_count }} hand{{ 's' if gesture.hand_count > 1 else '' }}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="py-6 text-center text-sm text-slate-500">
+                        No MSL sign has been validated yet. An administrator must verify the signs before they can be recognised.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent detections -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">This session</h3>
+                    <a href="{{ url_for('history.index') }}" class="text-xs font-medium text-accent hover:underline">Full history</a>
+                </div>
+                <div class="card-body">
+                    <ul id="session-log" class="space-y-2">
+                        <li class="py-4 text-center text-xs text-slate-400">No gestures detected in this session yet.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/recognition.js') }}"></script>
+<script>
+(function () {
+    "use strict";
+
+    const config = {
+        confidenceThreshold: {{ confidence_threshold }},
+        hasModel: {{ 'true' if has_model else 'false' }}
+    };
+
+    const els = {
+        video: document.getElementById("camera-video"),
+        overlay: document.getElementById("overlay-canvas"),
+        placeholder: document.getElementById("camera-placeholder"),
+        overlayPanel: document.getElementById("recognition-overlay"),
+        overlayGesture: document.getElementById("overlay-gesture"),
+        overlayMeaning: document.getElementById("overlay-meaning"),
+        overlayBar: document.getElementById("overlay-confidence-bar"),
+        cameraStatus: document.getElementById("camera-status"),
+        cameraMessage: document.getElementById("camera-message"),
+        cameraSelect: document.getElementById("camera-select"),
+        overlayToggle: document.getElementById("overlay-toggle"),
+        resultGesture: document.getElementById("result-gesture"),
+        resultMeaning: document.getElementById("result-meaning"),
+        resultConfidence: document.getElementById("result-confidence-value"),
+        resultBar: document.getElementById("result-confidence-bar"),
+        resultHand: document.getElementById("result-hand"),
+        resultModel: document.getElementById("result-model"),
+        resultLatency: document.getElementById("result-latency"),
+        resultState: document.getElementById("result-state"),
+        resultMessage: document.getElementById("result-message"),
+        sessionLog: document.getElementById("session-log"),
+        btnStartCamera: document.getElementById("btn-start-camera"),
+        btnStopCamera: document.getElementById("btn-stop-camera"),
+        btnStartRecognition: document.getElementById("btn-start-recognition"),
+        btnPauseRecognition: document.getElementById("btn-pause-recognition"),
+        btnClearResult: document.getElementById("btn-clear-result"),
+        btnSaveResult: document.getElementById("btn-save-result")
+    };
+
+    const sessionLog = [];
+    let hasLogged = {};
+
+    const controller = new RecognitionController({
+        confidenceThreshold: config.confidenceThreshold,
+        confirmationFrames: 3,
+        onResult: handleResult,
+        onStatus: handleStatus,
+        onError: (message) => window.MSL.toast(message, "bad")
+    });
+
+    function handleStatus(status) {
+        if (status.cameraState !== undefined) {
+            const dot = '<span class="inline-flex h-2 w-2 rounded-full ' +
+                (status.cameraState === "live" ? "bg-ok" : status.cameraState === "error" ? "bg-bad" : "bg-slate-300") +
+                '"></span>';
+            const label = { live: "Camera live", starting: "Starting camera", error: "Camera error", idle: "Camera off" };
+            els.cameraStatus.innerHTML = dot + "<span>" + (label[status.cameraState] || status.cameraState) + "</span>";
+        }
+        if (status.cameraError) {
+            showMessage(status.cameraError);
+        }
+        if (status.cameras) {
+            renderCameras(status.cameras);
+        }
+    }
+
+    function renderCameras(devices) {
+        const current = els.cameraSelect.value;
+        els.cameraSelect.innerHTML = "";
+        if (!devices.length) {
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Default camera";
+            els.cameraSelect.appendChild(option);
+            return;
+        }
+        devices.forEach(function (device, index) {
+            const option = document.createElement("option");
+            option.value = device.deviceId;
+            option.textContent = device.label || ("Camera " + (index + 1));
+            els.cameraSelect.appendChild(option);
+        });
+        if (current) els.cameraSelect.value = current;
+    }
+
+    function showMessage(message) {
+        els.cameraMessage.textContent = message;
+        els.cameraMessage.classList.remove("hidden");
+    }
+
+    function clearMessage() {
+        els.cameraMessage.classList.add("hidden");
+        els.cameraMessage.textContent = "";
+    }
+
+    function setState(state) {
+        const map = {
+            running: ["Recognising", "badge-info"],
+            paused: ["Paused", "badge-warn"],
+            stopped: ["Idle", "badge-muted"]
+        };
+        const entry = map[state] || ["Idle", "badge-muted"];
+        els.resultState.className = "badge " + entry[1];
+        els.resultState.textContent = entry[0];
+    }
+
+    function handleResult(result) {
+        if (!result) {
+            els.resultGesture.textContent = "—";
+            els.resultMeaning.textContent = "Start the camera to begin";
+            els.resultConfidence.textContent = "0%";
+            els.resultBar.style.width = "0%";
+            els.resultHand.textContent = "No";
+            els.resultModel.textContent = "—";
+            els.resultLatency.textContent = "—";
+            els.resultMessage.classList.add("hidden");
+            els.btnSaveResult.disabled = true;
+            els.btnClearResult.disabled = true;
+            els.overlayPanel.classList.add("hidden");
+            return;
+        }
+
+        const confidence = Math.round(result.confidence * 100);
+        els.resultConfidence.textContent = confidence + "%";
+        els.resultBar.style.width = confidence + "%";
+        els.resultHand.textContent = result.handDetected
+            ? (result.handCount + (result.handCount === 1 ? " hand" : " hands"))
+            : "No";
+        els.resultModel.textContent = result.modelVersion || "—";
+        els.resultLatency.textContent = result.latencyMs ? (result.latencyMs.toFixed(0) + " ms") : "—";
+
+        if (result.recognized && result.confirmed) {
+            els.resultGesture.textContent = result.gesture;
+            els.resultMeaning.textContent = result.translation || "";
+            els.resultMessage.classList.add("hidden");
+            els.btnSaveResult.disabled = false;
+        } else if (result.recognized) {
+            els.resultGesture.textContent = result.gesture;
+            els.resultMeaning.textContent = (result.translation || "") + " — confirming…";
+        } else {
+            els.resultGesture.textContent = "—";
+            els.resultMeaning.textContent = result.handDetected
+                ? "Gesture not recognised"
+                : "No hand detected";
+            els.btnSaveResult.disabled = true;
+            if (result.message) {
+                els.resultMessage.textContent = result.message;
+                els.resultMessage.classList.remove("hidden");
+            } else {
+                els.resultMessage.classList.add("hidden");
+            }
+        }
+
+        els.btnClearResult.disabled = false;
+
+        // On-screen overlay
+        if (result.handDetected) {
+            els.overlayPanel.classList.remove("hidden");
+            els.overlayGesture.textContent = result.gesture || "—";
+            els.overlayMeaning.textContent = result.translation || "Waiting for a sign";
+            els.overlayBar.style.width = confidence + "%";
+        } else {
+            els.overlayPanel.classList.add("hidden");
+        }
+
+        // Session log: a gesture is logged once per appearance.
+        if (result.registered) {
+            const key = result.gesture + "|" + Date.now();
+            if (!hasLogged[result.gesture]) {
+                hasLogged[result.gesture] = true;
+                sessionLog.unshift({
+                    gesture: result.gesture,
+                    translation: result.translation,
+                    confidence: result.confidence,
+                    time: new Date().toLocaleTimeString()
+                });
+                sessionLog.splice(0, 12);
+                renderSessionLog();
+            }
+        }
+    }
+
+    function renderSessionLog() {
+        if (!sessionLog.length) return;
+        els.sessionLog.innerHTML = "";
+        sessionLog.forEach(function (entry) {
+            const item = document.createElement("li");
+            item.className = "flex items-center justify-between gap-3 rounded-md border border-line px-3 py-2";
+            item.innerHTML =
+                '<div class="min-w-0"><p class="truncate text-sm font-medium text-navy"></p>' +
+                '<p class="truncate text-xs text-slate-500"></p></div>' +
+                '<div class="text-right"><p class="text-xs font-semibold text-navy"></p>' +
+                '<p class="text-[11px] text-slate-400"></p></div>';
+            item.querySelector("p").textContent = entry.gesture;
+            const meanings = item.querySelectorAll("p");
+            meanings[1].textContent = entry.translation || "";
+            meanings[2].textContent = Math.round(entry.confidence * 100) + "%";
+            meanings[3].textContent = entry.time;
+            els.sessionLog.appendChild(item);
+        });
+    }
+
+    els.btnStartCamera.addEventListener("click", async function () {
+        clearMessage();
+        const ok = await controller.startCamera(els.cameraSelect.value || undefined);
+        if (ok) {
+            els.placeholder.classList.add("hidden");
+            els.btnStartCamera.disabled = true;
+            els.btnStopCamera.disabled = false;
+            els.btnStartRecognition.disabled = false;
+            els.cameraSelect.disabled = false;
+        }
+    });
+
+    els.btnStopCamera.addEventListener("click", function () {
+        controller.stopCamera();
+        controller.stop();
+        els.placeholder.classList.remove("hidden");
+        els.btnStartCamera.disabled = false;
+        els.btnStopCamera.disabled = true;
+        els.btnStartRecognition.disabled = true;
+        els.btnPauseRecognition.disabled = true;
+        els.cameraSelect.disabled = true;
+        setState("stopped");
+    });
+
+    els.btnStartRecognition.addEventListener("click", function () {
+        if (!config.hasModel) {
+            window.MSL.toast("No published model is available yet.", "bad");
+            return;
+        }
+        controller.start();
+        els.btnStartRecognition.disabled = true;
+        els.btnPauseRecognition.disabled = false;
+    });
+
+    els.btnPauseRecognition.addEventListener("click", function () {
+        if (controller.paused) {
+            controller.resume();
+            els.btnPauseRecognition.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+            els.btnStartRecognition.disabled = true;
+        } else {
+            controller.pause();
+            els.btnPauseRecognition.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+            els.btnStartRecognition.disabled = false;
+        }
+    });
+
+    els.btnClearResult.addEventListener("click", function () {
+        controller.clearResult();
+        hasLogged = {};
+    });
+
+    els.btnSaveResult.addEventListener("click", async function () {
+        try {
+            await controller.saveResult();
+            window.MSL.toast("The recognition was saved to your history.", "ok");
+        } catch (error) {
+            window.MSL.toast(error.message, "bad");
+        }
+    });
+
+    els.cameraSelect.addEventListener("change", async function () {
+        if (!els.cameraSelect.value) return;
+        const ok = await controller.startCamera(els.cameraSelect.value);
+        if (ok) {
+            els.placeholder.classList.add("hidden");
+            els.btnStartCamera.disabled = true;
+            els.btnStopCamera.disabled = false;
+            els.btnStartRecognition.disabled = false;
+        }
+    });
+
+    els.overlayToggle.addEventListener("change", function () {
+        els.overlay.style.display = els.overlayToggle.checked ? "" : "none";
+    });
+
+    window.addEventListener("beforeunload", function () {
+        controller.stopCamera();
+    });
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden && controller.running) {
+            controller.pause();
+            els.btnPauseRecognition.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+            els.btnStartRecognition.disabled = false;
+        }
+    });
+
+    controller.enumerateCameras();
+})();
+</script>
+{% endblock %}

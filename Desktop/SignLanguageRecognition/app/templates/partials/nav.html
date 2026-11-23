@@ -1,0 +1,42 @@
+{# Sidebar navigation shared by every signed-in page. #}
+{% set nav_items = [
+    {'endpoint': 'dashboard.index',      'label': 'Dashboard',    'icon': 'fa-gauge-high'},
+    {'endpoint': 'recognition.index',    'label': 'Live Recognition', 'icon': 'fa-video'},
+    {'endpoint': 'vocabulary.index',     'label': 'Vocabulary',  'icon': 'fa-language'},
+    {'endpoint': 'history.index',        'label': 'History',     'icon': 'fa-clock-rotate-left'}
+] %}
+{% set admin_items = [
+    {'endpoint': 'dataset.index',        'label': 'Dataset',     'icon': 'fa-database'},
+    {'endpoint': 'training.index',       'label': 'Training',    'icon': 'fa-brain'},
+    {'endpoint': 'evaluation.index',     'label': 'Evaluation',  'icon': 'fa-chart-simple'},
+    {'endpoint': 'admin.index',          'label': 'Administration', 'icon': 'fa-shield-halved'}
+] %}
+
+<ul class="space-y-1">
+    {% for item in nav_items %}
+    {% set active = request.endpoint == item.endpoint %}
+    <li>
+        <a href="{{ url_for(item.endpoint) }}"
+           class="group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors {% if active %}bg-accent text-white{% else %}text-slate-300 hover:bg-white/10 hover:text-white{% endif %}">
+            <i class="fa-solid {{ item.icon }} w-4 {% if active %}text-white{% else %}text-slate-400 group-hover:text-white{% endif %}"></i>
+            {{ item.label }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if current_user.is_admin %}
+<p class="px-3 pb-2 pt-5 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Administration</p>
+<ul class="space-y-1">
+    {% for item in admin_items %}
+    {% set active = request.endpoint == item.endpoint %}
+    <li>
+        <a href="{{ url_for(item.endpoint) }}"
+           class="group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors {% if active %}bg-accent text-white{% else %}text-slate-300 hover:bg-white/10 hover:text-white{% endif %}">
+            <i class="fa-solid {{ item.icon }} w-4 {% if active %}text-white{% else %}text-slate-400 group-hover:text-white{% endif %}"></i>
+            {{ item.label }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
