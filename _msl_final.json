@@ -1,0 +1,275 @@
+{
+ "83": {
+  "number": 83,
+  "english": "mother, women",
+  "chichewa": "mayi",
+  "theme": "Family and people",
+  "hands": 1,
+  "handshape": [
+   "bc"
+  ],
+  "location": "chest_heart_stomach",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/83-mother/"
+ },
+ "88": {
+  "number": 88,
+  "english": "brother",
+  "chichewa": "mchimwene",
+  "theme": "Family and people",
+  "hands": 1,
+  "handshape": [
+   "b"
+  ],
+  "location": "chest_heart_stomach",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/88-brother/"
+ },
+ "89": {
+  "number": 89,
+  "english": "sister",
+  "chichewa": "chemwali",
+  "theme": "Family and people",
+  "hands": 1,
+  "handshape": [
+   "s"
+  ],
+  "location": "chest_heart_stomach",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/89-sister/"
+ },
+ "94": {
+  "number": 94,
+  "english": "daughter",
+  "chichewa": "mwana wamkazi",
+  "theme": "Family and people",
+  "hands": 2,
+  "handshape": [
+   "go",
+   "bc"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/94-daughter/"
+ },
+ "107": {
+  "number": 107,
+  "english": "thief, steal",
+  "chichewa": "mbava, wakuba, mbala, tsizinamtole, kuba",
+  "theme": "Family and people",
+  "hands": 2,
+  "handshape": [
+   "v",
+   "s"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/107-thief-steal/"
+ },
+ "125": {
+  "number": 125,
+  "english": "feeling",
+  "chichewa": "-mva, khudza, -mvetsa",
+  "theme": "Emotions",
+  "hands": 1,
+  "handshape": [
+   "fi"
+  ],
+  "location": "chest_heart_stomach",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/125-feeling/"
+ },
+ "134": {
+  "number": 134,
+  "english": "surprise",
+  "chichewa": "-dabwitsa, dodometsa",
+  "theme": "Emotions",
+  "hands": 1,
+  "handshape": [
+   "xi"
+  ],
+  "location": "head",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/134-surprise/"
+ },
+ "146": {
+  "number": 146,
+  "english": "July",
+  "chichewa": "Julayi",
+  "theme": "Time",
+  "hands": 2,
+  "handshape": [
+   "i",
+   "y"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/146-july/"
+ },
+ "152": {
+  "number": 152,
+  "english": "day",
+  "chichewa": "tsiku",
+  "theme": "Time",
+  "hands": 2,
+  "handshape": [
+   "z",
+   "b"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/152-day/"
+ },
+ "153": {
+  "number": 153,
+  "english": "Monday",
+  "chichewa": "lolemba",
+  "theme": "Time",
+  "hands": 1,
+  "handshape": [
+   "m"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "cir"
+  ],
+  "url": "https://msld.manadmw.org/sign/153-monday/"
+ },
+ "155": {
+  "number": 155,
+  "english": "Wednesday",
+  "chichewa": "lachitatu",
+  "theme": "Time",
+  "hands": 1,
+  "handshape": [
+   "w"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "cir"
+  ],
+  "url": "https://msld.manadmw.org/sign/155-wednesday/"
+ },
+ "202": {
+  "number": 202,
+  "english": "knowledge, intelligent",
+  "chichewa": "chidziwitso, nzeru",
+  "theme": "Education",
+  "hands": 1,
+  "handshape": [
+   "vc"
+  ],
+  "location": "head",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/202-knowledge-intelligent/"
+ },
+ "246": {
+  "number": 246,
+  "english": "black",
+  "chichewa": "-kuda",
+  "theme": "Colours",
+  "hands": 1,
+  "handshape": [
+   "p"
+  ],
+  "location": "head",
+  "movement": [],
+  "url": "https://msld.manadmw.org/sign/246-black/"
+ },
+ "247": {
+  "number": 247,
+  "english": "red",
+  "chichewa": "chofiira",
+  "theme": "Colours",
+  "hands": 1,
+  "handshape": [
+   "r"
+  ],
+  "location": "head",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/247-red/"
+ },
+ "347": {
+  "number": 347,
+  "english": "country",
+  "chichewa": "dziko",
+  "theme": "Places",
+  "hands": 2,
+  "handshape": [
+   "c",
+   "s"
+  ],
+  "location": "arm_elbow",
+  "movement": [
+   "cir"
+  ],
+  "url": "https://msld.manadmw.org/sign/347-country/"
+ },
+ "349": {
+  "number": 349,
+  "english": "village, grass",
+  "chichewa": "mudzi, udzu",
+  "theme": "Places",
+  "hands": 2,
+  "handshape": [
+   "t",
+   "s"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [
+   "cir"
+  ],
+  "url": "https://msld.manadmw.org/sign/349-village-grass/"
+ },
+ "361": {
+  "number": 361,
+  "english": "Blantyre",
+  "chichewa": "Blantyre",
+  "theme": "Places",
+  "hands": 2,
+  "handshape": [
+   "b",
+   "t"
+  ],
+  "location": "nsh_nsm_nsl",
+  "movement": [],
+  "url": "https://msld.manadmw.org/sign/361-blantyre/"
+ },
+ "359": {
+  "number": 359,
+  "english": "Kasungu, tobacco",
+  "chichewa": "Kasungu, Fodya",
+  "theme": "Places",
+  "hands": 1,
+  "handshape": [
+   "k"
+  ],
+  "location": "head",
+  "movement": [
+   "str_arc_pa_wav"
+  ],
+  "url": "https://msld.manadmw.org/sign/359-kasungu-tobacco/"
+ }
+}
