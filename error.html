@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Error {{ code }}{% endblock %}
+{% block mobile_title %}Error {{ code }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg py-12 text-center">
+    <p class="text-5xl font-bold text-navy">{{ code }}</p>
+    <h2 class="mt-3 text-lg font-semibold text-navy">{{ message }}</h2>
+    <p class="mt-2 text-sm text-slate-500">
+        {% if code == 404 %}
+            The page or resource you requested does not exist.
+        {% elif code == 403 %}
+            Your account does not have the required role for this area.
+        {% elif code == 401 %}
+            You need to sign in to view this page.
+        {% elif code == 413 %}
+            The uploaded file exceeds the maximum accepted size.
+        {% else %}
+            The request could not be completed. Please try again.
+        {% endif %}
+    </p>
+    <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">
+            <i class="fa-solid fa-house"></i> Back to the dashboard
+        </a>
+        <a href="{{ url_for('landing.index') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Public home page
+        </a>
+    </div>
+</div>
+{% endblock %}
