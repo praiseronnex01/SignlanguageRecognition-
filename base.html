@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}{{ project_name }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}AI-based Malawi Sign Language recognition using computer vision and machine learning.{% endblock %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { DEFAULT: '#101C32', soft: '#1E293B', muted: '#334155' },
+                        accent: { DEFAULT: '#2563EB', soft: '#EFF4FF', dark: '#1D4ED8' },
+                        surface: '#F5F7FA',
+                        line: '#E2E8F0',
+                        ok: '#15803D', warn: '#D97706', bad: '#DC2626'
+                    },
+                    fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    boxShadow: {
+                        card: '0 1px 2px 0 rgba(16, 28, 50, 0.04), 0 1px 3px 0 rgba(16, 28, 50, 0.06)',
+                        panel: '0 4px 16px 0 rgba(16, 28, 50, 0.08)'
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}" type="image/svg+xml">
+</head>
+<body class="h-full bg-surface font-sans text-navy-muted antialiased"
+      data-role="{% if current_user.is_authenticated %}{{ current_user.role }}{% else %}guest{% endif %}">
+{% block body %}
+<div class="min-h-full lg:flex">
+
+    <!-- ================= Sidebar ================= -->
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full border-r border-line bg-navy text-slate-300 transition-transform duration-200 ease-out lg:translate-x-0">
+        <div class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white">
+                <i class="fa-solid fa-hand-sparkles"></i>
+            </span>
+            <span class="leading-tight">
+                <span class="block text-sm font-semibold text-white">MSL Recognition</span>
+                <span class="block text-[11px] text-slate-400">Malawi Sign Language</span>
+            </span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto px-3 py-4">
+            <p class="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Workspace</p>
+            {% include 'partials/nav.html' %}
+        </nav>
+
+        <div class="border-t border-white/10 p-3">
+            <div class="rounded-lg bg-white/5 p-3">
+                <p class="text-[11px] uppercase tracking-wider text-slate-500">Vocabulary source</p>
+                <a href="{{ msl_reference_url }}" target="_blank" rel="noopener noreferrer"
+                   class="mt-1 flex items-center gap-2 text-xs text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-book-open text-accent"></i>
+                    Malawian Sign Language Dictionary
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-navy/60 lg:hidden"></div>
+
+    <!-- ================= Main column ================= -->
+    <div class="flex min-w-0 flex-1 flex-col lg:ml-64">
+
+        <!-- ================= Top bar ================= -->
+        <header class="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-line bg-white px-4 sm:px-6">
+            <button id="sidebar-toggle" type="button"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-navy-muted hover:bg-surface lg:hidden"
+                    aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="min-w-0 flex-1">
+                <nav class="hidden items-center gap-2 text-xs text-slate-500 sm:flex">
+                    <span>{{ project_short_name }}</span>
+                    <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                    <span class="font-medium text-navy">{% block breadcrumb %}Overview{% endblock %}</span>
+                </nav>
+                <h1 class="truncate text-base font-semibold text-navy sm:hidden">{% block mobile_title %}{% endblock %}</h1>
+            </div>
+
+            <div class="flex items-center gap-2">
+                {% block topbar_actions %}{% endblock %}
+                {% if current_user.is_authenticated %}
+                <div class="relative" id="user-menu">
+                    <button type="button" id="user-menu-button"
+                            class="flex items-center gap-2 rounded-md border border-line bg-white px-2 py-1.5 text-sm font-medium text-navy hover:bg-surface">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-dark">
+                            {{ current_user.full_name[:1]|upper }}
+                        </span>
+                        <span class="hidden max-w-[9rem] truncate sm:inline">{{ current_user.full_name }}</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                    </button>
+                    <div id="user-menu-panel"
+                         class="absolute right-0 mt-2 hidden w-56 overflow-hidden rounded-lg border border-line bg-white shadow-panel">
+                        <div class="border-b border-line px-4 py-3">
+                            <p class="truncate text-sm font-semibold text-navy">{{ current_user.full_name }}</p>
+                            <p class="truncate text-xs text-slate-500">{{ current_user.email }}</p>
+                        </div>
+                        <a href="{{ url_for('auth.profile') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-navy-muted hover:bg-surface">
+                            <i class="fa-regular fa-user w-4 text-slate-400"></i> My profile
+                        </a>
+                        {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.index') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-navy-muted hover:bg-surface">
+                            <i class="fa-solid fa-shield-halved w-4 text-slate-400"></i> Administration
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}" class="flex items-center gap-2 border-t border-line px-4 py-2.5 text-sm text-bad hover:bg-surface">
+                            <i class="fa-solid fa-right-from-bracket w-4 text-slate-400"></i> Sign out
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.login_page') }}" class="btn btn-primary">Sign in</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- ================= Flash messages ================= -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="space-y-2 px-4 pt-4 sm:px-6 lg:px-8">
+            {% for category, message in messages %}
+            {% set tone = {'error': 'bad', 'danger': 'bad', 'warning': 'warn', 'success': 'ok'}.get(category, 'accent') %}
+            {% set icon = {'error': 'fa-circle-exclamation', 'danger': 'fa-circle-exclamation', 'warning': 'fa-triangle-exclamation', 'success': 'fa-circle-check'}.get(category, 'fa-circle-info') %}
+            <div class="flex items-start gap-3 rounded-lg border border-line bg-white px-4 py-3 text-sm shadow-card flash-message">
+                <i class="fa-solid {{ icon }} mt-0.5 text-{{ tone }}"></i>
+                <p class="flex-1 text-navy-muted">{{ message }}</p>
+                <button type="button" class="flash-dismiss text-slate-400 hover:text-navy" aria-label="Dismiss">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- ================= Content ================= -->
+        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="border-t border-line bg-white px-4 py-5 text-xs text-slate-500 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p>
+                    <i class="fa-solid fa-graduation-cap mr-1 text-accent"></i>
+                    {{ project_name }} &mdash; final-year academic prototype.
+                </p>
+                <p>
+                    MSL reference:
+                    <a href="{{ msl_reference_url }}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">msld.manadmw.org</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
