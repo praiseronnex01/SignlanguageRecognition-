@@ -1,219 +1,286 @@
 {% extends "base.html" %}
-{% block title %}Administration &middot; {{ project_short_name }}{% endblock %}
-{% block breadcrumb %}Administration{% endblock %}
-{% block mobile_title %}Administration{% endblock %}
+{% block title %}Dataset management &middot; {{ project_short_name }}{% endblock %}
+{% block breadcrumb %}Dataset management{% endblock %}
+{% block mobile_title %}Dataset management{% endblock %}
 
 {% block content %}
 <div class="space-y-5">
 
     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h2 class="text-xl font-semibold text-navy">Administration</h2>
-            <p class="mt-1 text-sm text-slate-500">System management, access control and the audit trail.</p>
+            <h2 class="text-xl font-semibold text-navy">Dataset management</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Capture labelled hand landmarks from anonymous participants. Only the extracted landmarks are stored
+                &mdash; raw camera footage is never written to disk.
+            </p>
         </div>
         <div class="flex flex-wrap gap-2">
-            <a href="{{ url_for('vocabulary.index') }}" class="btn btn-secondary">
-                <i class="fa-solid fa-language"></i> Manage vocabulary
+            <button type="button" id="btn-refresh-samples" class="btn btn-secondary">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+            <a href="{{ url_for('dataset.api_export_download') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-download"></i> Download CSV
             </a>
-            <a href="{{ url_for('dataset.index') }}" class="btn btn-secondary">
-                <i class="fa-solid fa-database"></i> Dataset
-            </a>
-            <a href="{{ url_for('training.index') }}" class="btn btn-secondary">
-                <i class="fa-solid fa-brain"></i> Training
-            </a>
+            <button type="button" id="btn-export" class="btn btn-primary">
+                <i class="fa-solid fa-file-export"></i> Export dataset
+            </button>
         </div>
     </div>
 
-    <!-- ================= Overview ================= -->
+    <!-- ================= Statistics ================= -->
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div class="stat-card">
-            <p class="stat-label">User accounts</p>
-            <p class="stat-value" id="ad-users">{{ user_count }}</p>
-            <p class="stat-hint">Registration and role management</p>
+            <p class="stat-label">Total samples</p>
+            <p class="stat-value" id="ds-total">{{ stats.total_samples }}</p>
+            <p class="stat-hint">{{ stats.gestures_with_samples }} gesture(s) represented</p>
         </div>
         <div class="stat-card">
-            <p class="stat-label">Vocabulary entries</p>
-            <p class="stat-value" id="ad-gestures">{{ gesture_count }}</p>
-            <p class="stat-hint">Candidate and validated MSL signs</p>
+            <p class="stat-label">Participants</p>
+            <p class="stat-value" id="ds-participants">{{ stats.participant_count }}</p>
+            <p class="stat-hint">{{ stats.participants }} consented</p>
         </div>
         <div class="stat-card">
-            <p class="stat-label">Dataset samples</p>
-            <p class="stat-value" id="ad-samples">{{ sample_count }}</p>
-            <p class="stat-hint">From {{ participant_count }} participant(s)</p>
+            <p class="stat-label">Class balance</p>
+            <p class="stat-value" id="ds-balance">
+                {% if stats.class_balance_ratio is not none %}{{ '%.0f'|format(stats.class_balance_ratio * 100) }}%{% else %}&mdash;{% endif %}
+            </p>
+            <p class="stat-hint">Smallest class / largest class</p>
         </div>
         <div class="stat-card">
-            <p class="stat-label">Model versions</p>
-            <p class="stat-value" id="ad-models">{{ model_count }}</p>
-            <p class="stat-hint">{{ run_count }} training run(s)</p>
+            <p class="stat-label">Duplicates</p>
+            <p class="stat-value" id="ds-duplicates">{{ stats.duplicate_samples }}</p>
+            <p class="stat-hint">{{ stats.duplicate_groups }} duplicated group(s)</p>
         </div>
     </div>
 
-    <!-- ================= Users ================= -->
+    <div class="grid gap-5 xl:grid-cols-5">
+
+        <!-- ================= Collection interface ================= -->
+        <div class="xl:col-span-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Collection station</h3>
+                    <div id="ds-camera-status" class="flex items-center gap-2 text-xs text-slate-500">
+                        <span class="inline-flex h-2 w-2 rounded-full bg-slate-300"></span><span>Camera off</span>
+                    </div>
+                </div>
+
+                <div class="card-body space-y-4">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="collect-gesture" class="form-label">Gesture label</label>
+                            <select id="collect-gesture" class="form-select">
+                                <option value="">Select a gesture…</option>
+                                {% for gesture in gestures %}
+                                <option value="{{ gesture.id }}" data-hands="{{ gesture.hand_count }}"
+                                        data-label="{{ gesture.label }}">
+                                    {{ gesture.label }} — {{ gesture.english_meaning }} ({{ gesture.hand_count }} hand{{ 's' if gesture.hand_count > 1 else '' }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="collect-participant" class="form-label">Participant code</label>
+                            <input type="text" id="collect-participant" class="form-input" placeholder="e.g. P001" list="participant-codes">
+                            <datalist id="participant-codes">
+                                {% for participant in participants %}
+                                <option value="{{ participant.participant_code }}"></option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="collect-consent" class="form-label">Consent status</label>
+                            <select id="collect-consent" class="form-select">
+                                <option value="pending">Pending</option>
+                                <option value="granted">Granted</option>
+                                <option value="declined">Declined</option>
+                                <option value="withdrawn">Withdrawn</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <button type="button" id="btn-register-participant" class="btn btn-secondary">
+                                <i class="fa-solid fa-user-plus"></i> Register participant
+                            </button>
+                            <button type="button" id="btn-start-session" class="btn btn-secondary">
+                                <i class="fa-solid fa-folder-plus"></i> Start session
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="video-shell">
+                        <video id="ds-video" playsinline muted></video>
+                        <canvas id="ds-overlay" class="mirror"></canvas>
+                        <div id="ds-placeholder" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-navy text-center">
+                            <i class="fa-solid fa-video text-3xl text-slate-600"></i>
+                            <p class="px-6 text-sm text-slate-400">The collection preview appears here once the camera is started.</p>
+                        </div>
+                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/90 to-transparent p-4">
+                            <div class="flex items-center justify-between text-xs text-slate-300">
+                                <span id="ds-session-label">No active session</span>
+                                <span id="ds-counter">0 samples captured</span>
+                            </div>
+                            <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+                                <div id="ds-progress" class="h-full rounded-full bg-accent" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" id="ds-start-camera" class="btn btn-dark">
+                            <i class="fa-solid fa-play"></i> Start camera
+                        </button>
+                        <button type="button" id="ds-stop-camera" class="btn btn-secondary" disabled>
+                            <i class="fa-solid fa-stop"></i> Stop camera
+                        </button>
+                        <button type="button" id="ds-start-collection" class="btn btn-primary" disabled>
+                            <i class="fa-solid fa-circle"></i> Start collection
+                        </button>
+                        <button type="button" id="ds-pause-collection" class="btn btn-secondary" disabled>
+                            <i class="fa-solid fa-pause"></i> Pause collection
+                        </button>
+                        <button type="button" id="ds-stop-collection" class="btn btn-secondary" disabled>
+                            <i class="fa-solid fa-square"></i> Stop collection
+                        </button>
+                    </div>
+
+                    <div id="ds-message" class="hidden rounded-md border border-line bg-surface px-4 py-3 text-sm text-navy-muted"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Side panels ================= -->
+        <div class="space-y-5 xl:col-span-2">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Samples per gesture</h3>
+                    <span class="badge badge-muted" id="ds-total-badge">{{ stats.total_samples }}</span>
+                </div>
+                <div class="card-body">
+                    <ul id="ds-class-list" class="space-y-2.5">
+                        {% for entry in stats.per_gesture %}
+                        <li>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-medium text-navy">{{ entry.label }}</span>
+                                <span class="text-slate-500">{{ entry.sample_count }}</span>
+                            </div>
+                            <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-surface">
+                                <div class="h-full rounded-full {% if entry.is_validated %}bg-ok{% else %}bg-accent{% endif %}"
+                                     style="width: {{ (entry.sample_count / stats.total_samples * 100) if stats.total_samples else 0 }}%"></div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="mt-4 border-t border-line pt-3 text-[11px] leading-relaxed text-slate-500">
+                        Green bars indicate gestures that an administrator has validated. Only validated gestures are
+                        included in an exported training dataset.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Participant contributions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Code</th><th>Consent</th><th class="text-right">Samples</th><th class="text-right">Signs</th></tr>
+                            </thead>
+                            <tbody id="ds-participant-rows">
+                                {% for participant in participants %}
+                                <tr>
+                                    <td class="font-medium text-navy">{{ participant.participant_code }}</td>
+                                    <td>
+                                        {% set tone = {'granted': 'badge-ok', 'pending': 'badge-warn', 'declined': 'badge-bad', 'withdrawn': 'badge-muted'}.get(participant.consent_status, 'badge-muted') %}
+                                        <span class="badge {{ tone }}">{{ participant.consent_status }}</span>
+                                    </td>
+                                    <td class="text-right">{{ participant.sample_count }}</td>
+                                    <td class="text-right">{{ participant.gesture_count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Collection sessions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead><tr><th>Code</th><th>Status</th><th class="text-right">Samples</th></tr></thead>
+                            <tbody id="ds-session-rows">
+                                {% for session in sessions %}
+                                <tr>
+                                    <td class="font-medium text-navy">{{ session.session_code }}</td>
+                                    <td>
+                                        {% set tone = {'active': 'badge-info', 'completed': 'badge-ok', 'aborted': 'badge-bad'}.get(session.status, 'badge-muted') %}
+                                        <span class="badge {{ tone }}">{{ session.status }}</span>
+                                    </td>
+                                    <td class="text-right">{{ session.sample_count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= Sample browser ================= -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">User management</h3>
-            <div class="flex flex-wrap items-center gap-2">
-                <input type="search" id="ad-user-search" class="form-input !w-56 !py-1.5 text-xs" placeholder="Search name or email">
-                <select id="ad-user-role" class="form-select !w-auto !py-1.5 text-xs">
-                    <option value="">All roles</option>
-                    <option value="admin">Administrators</option>
-                    <option value="user">Standard users</option>
+            <h3 class="card-title">Collected samples</h3>
+            <div class="flex items-center gap-2">
+                <select id="ds-filter-gesture" class="form-select !w-auto !py-1.5 text-xs">
+                    <option value="">All gestures</option>
+                    {% for gesture in gestures %}
+                    <option value="{{ gesture.id }}">{{ gesture.label }}</option>
+                    {% endfor %}
+                </select>
+                <select id="ds-filter-participant" class="form-select !w-auto !py-1.5 text-xs">
+                    <option value="">All participants</option>
+                    {% for participant in participants %}
+                    <option value="{{ participant.participant_code }}">{{ participant.participant_code }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
         <div class="table-wrap">
             <table class="data-table">
                 <thead>
-                    <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th class="text-right">Actions</th></tr>
-                </thead>
-                <tbody id="ad-user-rows">
-                    <tr><td colspan="6" class="py-8 text-center text-sm text-slate-400">Loading users…</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ================= Audit log ================= -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">System activity log</h3>
-            <button type="button" id="ad-refresh-logs" class="btn btn-secondary btn-sm">
-                <i class="fa-solid fa-rotate"></i> Refresh
-            </button>
-        </div>
-        <div class="table-wrap">
-            <table class="data-table">
-                <thead>
-                    <tr><th>Action</th><th>Description</th><th>User</th><th>IP address</th><th>When</th></tr>
-                </thead>
-                <tbody id="ad-log-rows">
-                    {% for entry in recent_logs %}
                     <tr>
-                        <td><span class="badge badge-muted">{{ entry.action }}</span></td>
-                        <td class="max-w-md truncate">{{ entry.description }}</td>
-                        <td class="text-xs text-slate-500">{{ entry.user.email if entry.user else 'system' }}</td>
-                        <td class="text-xs text-slate-500">{{ entry.ip_address or '-' }}</td>
-                        <td class="whitespace-nowrap text-xs text-slate-500">{{ entry.created_at|datetime }}</td>
+                        <th>ID</th><th>Gesture</th><th>Participant</th><th>Session</th>
+                        <th>Hands</th><th>Handedness</th><th>Quality</th><th>Captured</th><th></th>
                     </tr>
-                    {% endfor %}
+                </thead>
+                <tbody id="ds-sample-rows">
+                    <tr><td colspan="9" class="py-8 text-center text-sm text-slate-400">Loading samples…</td></tr>
                 </tbody>
             </table>
+        </div>
+        <div class="card-footer flex items-center justify-between text-xs text-slate-500">
+            <span id="ds-sample-count">-</span>
+            <div class="flex items-center gap-2">
+                <button type="button" id="ds-prev" class="btn btn-secondary btn-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                <span id="ds-page">1 / 1</span>
+                <button type="button" id="ds-next" class="btn btn-secondary btn-sm"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-(function () {
-    "use strict";
-
-    const rows = document.getElementById("ad-user-rows");
-    if (!rows) return;
-
-    const searchInput = document.getElementById("ad-user-search");
-    const roleSelect = document.getElementById("ad-user-role");
-    let timer = null;
-
-    async function loadUsers() {
-        const params = new URLSearchParams();
-        params.set("per_page", 50);
-        if (searchInput.value.trim()) params.set("search", searchInput.value.trim());
-        if (roleSelect.value) params.set("role", roleSelect.value);
-
-        try {
-            const response = await window.MSL.api.get("/admin/api/admin/users?" + params.toString());
-            const users = response.users || [];
-            rows.innerHTML = "";
-            if (!users.length) {
-                rows.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-sm text-slate-400">No accounts match the current filters.</td></tr>';
-                return;
-            }
-            users.forEach(function (user) {
-                const row = document.createElement("tr");
-                row.innerHTML =
-                    '<td class="font-medium text-navy">' + window.MSL.escapeHtml(user.full_name) + "</td>" +
-                    "<td>" + window.MSL.escapeHtml(user.email) + "</td>" +
-                    '<td><span class="badge ' + (user.role === "admin" ? "badge-info" : "badge-muted") + '">' + user.role + "</span></td>" +
-                    '<td><span class="badge ' + (user.is_active ? "badge-ok" : "badge-bad") + '">' +
-                    (user.is_active ? "Active" : "Deactivated") + "</span></td>" +
-                    '<td class="whitespace-nowrap text-xs text-slate-500">' + window.MSL.formatDate(user.created_at) + "</td>" +
-                    '<td class="text-right"><div class="flex justify-end gap-2">' +
-                    '<select class="form-select !w-auto !py-1 text-xs js-role-select" data-id="' + user.id + '">' +
-                    '<option value="user"' + (user.role === "user" ? " selected" : "") + ">Standard user</option>" +
-                    '<option value="admin"' + (user.role === "admin" ? " selected" : "") + ">Administrator</option>" +
-                    "</select>" +
-                    '<button type="button" class="btn btn-secondary btn-sm js-toggle-active" data-id="' + user.id + '" ' +
-                    'data-active="' + (user.is_active ? "1" : "0") + '">' +
-                    (user.is_active ? "Deactivate" : "Activate") + "</button>" +
-                    "</div></td>";
-                rows.appendChild(row);
-            });
-
-            rows.querySelectorAll(".js-role-select").forEach(function (select) {
-                select.addEventListener("change", async function () {
-                    try {
-                        await window.MSL.api.put("/admin/api/admin/users/" + select.dataset.id, { role: select.value });
-                        window.MSL.toast("The role was updated.", "ok");
-                        loadUsers();
-                    } catch (error) {
-                        window.MSL.toast(error.message, "bad");
-                        loadUsers();
-                    }
-                });
-            });
-
-            rows.querySelectorAll(".js-toggle-active").forEach(function (button) {
-                button.addEventListener("click", async function () {
-                    const activate = button.dataset.active !== "1";
-                    try {
-                        await window.MSL.api.put("/admin/api/admin/users/" + button.dataset.id, { is_active: activate });
-                        window.MSL.toast("The account was updated.", "ok");
-                        loadUsers();
-                    } catch (error) {
-                        window.MSL.toast(error.message, "bad");
-                    }
-                });
-            });
-        } catch (error) {
-            rows.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-sm text-bad">' +
-                window.MSL.escapeHtml(error.message) + "</td></tr>";
-        }
-    }
-
-    async function loadLogs() {
-        const body = document.getElementById("ad-log-rows");
-        try {
-            const response = await window.MSL.api.get("/admin/api/admin/audit-logs?per_page=25");
-            const logs = response.logs || [];
-            body.innerHTML = "";
-            if (!logs.length) {
-                body.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-400">No activity recorded yet.</td></tr>';
-                return;
-            }
-            logs.forEach(function (entry) {
-                const row = document.createElement("tr");
-                row.innerHTML =
-                    '<td><span class="badge badge-muted">' + window.MSL.escapeHtml(entry.action) + "</span></td>" +
-                    '<td class="max-w-md truncate">' + window.MSL.escapeHtml(entry.description || "") + "</td>" +
-                    '<td class="text-xs text-slate-500">' + window.MSL.escapeHtml(entry.user_email || "system") + "</td>" +
-                    '<td class="text-xs text-slate-500">' + window.MSL.escapeHtml(entry.ip_address || "-") + "</td>" +
-                    '<td class="whitespace-nowrap text-xs text-slate-500">' + window.MSL.formatDateTime(entry.created_at) + "</td>";
-                body.appendChild(row);
-            });
-        } catch (error) {
-            /* keep the server-rendered rows */
-        }
-    }
-
-    searchInput.addEventListener("input", function () {
-        window.clearTimeout(timer);
-        timer = window.setTimeout(loadUsers, 220);
-    });
-    roleSelect.addEventListener("change", loadUsers);
-    document.getElementById("ad-refresh-logs").addEventListener("click", loadLogs);
-
-    loadUsers();
-})();
-</script>
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataset.js') }}"></script>
 {% endblock %}
