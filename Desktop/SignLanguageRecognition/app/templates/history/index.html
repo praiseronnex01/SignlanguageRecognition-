@@ -14,7 +14,7 @@
             </p>
         </div>
         <div class="flex flex-wrap gap-2">
-            <a href="{{ url_for('history.api_export') }}" class="btn btn-secondary">
+            <a href="{{ url_for('history.api_export', search=search, date_from=date_from, date_to=date_to) }}" class="btn btn-secondary">
                 <i class="fa-solid fa-file-csv"></i> Export CSV
             </a>
             <button type="button" id="btn-clear-history" class="btn btn-danger">

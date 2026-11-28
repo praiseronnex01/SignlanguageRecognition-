@@ -47,6 +47,10 @@
             const failure = new Error(message);
             failure.status = response.status;
             failure.payload = payload;
+            if (failure.status === 401 && !window.location.pathname.startsWith("/auth/")) {
+                const next = window.location.pathname + window.location.search;
+                window.location.assign("/auth/login?next=" + encodeURIComponent(next));
+            }
             throw failure;
         }
         return payload;

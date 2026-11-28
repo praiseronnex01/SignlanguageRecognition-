@@ -234,12 +234,15 @@ def api_collect():
     except HandDetectorError as exc:
         return json_error(str(exc), 503)
 
+    landmarks = detection.to_dict(include_landmarks=True)
+
     if not detection.hands:
         return json_success(
             stored=False,
             message="No hand detected - the frame was not saved.",
             hand_detected=False,
             hand_count=0,
+            landmarks=landmarks,
         )
 
     if len(detection.hands) != int(gesture.hand_count):
@@ -251,6 +254,7 @@ def api_collect():
             ),
             hand_detected=True,
             hand_count=len(detection.hands),
+            landmarks=landmarks,
         )
 
     try:
@@ -263,9 +267,15 @@ def api_collect():
             quality_score=feature_extractor.quality_score(detection),
         )
     except feature_extractor.FeatureExtractionError as exc:
-        return json_error(str(exc), 400)
+        return json_error(str(exc), 400, landmarks=landmarks)
     except dataset_service.DatasetError as exc:
-        return json_success(stored=False, message=str(exc), hand_detected=True)
+        return json_success(
+            stored=False,
+            message=str(exc),
+            hand_detected=True,
+            hand_count=len(detection.hands),
+            landmarks=landmarks,
+        )
 
     return json_success(
         stored=True,
@@ -273,6 +283,7 @@ def api_collect():
         sample=sample.to_dict(),
         hand_detected=True,
         hand_count=len(detection.hands),
+        landmarks=landmarks,
     ), 201
 
 

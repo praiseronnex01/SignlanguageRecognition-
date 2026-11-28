@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import json
 
 import pytest
@@ -11,7 +12,7 @@ from app.models.collection_session import CollectionSession
 from app.models.dataset_sample import DatasetSample
 from app.models.participant import Participant
 from app.services import dataset_service
-from tests.conftest import make_hand_observation
+from tests.conftest import make_detection, make_hand_observation
 
 
 def _payload(handedness="Right", shape="open"):
@@ -294,3 +295,43 @@ def test_dataset_api_endpoints(client, login_admin, gesture):
     response = client.get("/dataset/api/dataset/validate")
     assert response.status_code == 200
     assert "report" in response.get_json()
+
+
+def test_collection_response_includes_hand_landmarks(
+    client, login_admin, gesture, sample_jpeg, monkeypatch
+):
+    class StubDatasetDetector:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def detect(self, frame):
+            return make_detection([make_hand_observation(shape="open")])
+
+    monkeypatch.setattr(
+        "app.blueprints.dataset.routes.HandDetector",
+        StubDatasetDetector,
+    )
+    client.post(
+        "/dataset/api/dataset/participants",
+        json={"participant_code": "LANDMARK01", "consent_status": "granted"},
+    )
+    session = client.post(
+        "/dataset/api/dataset/sessions",
+        json={"participant_code": "LANDMARK01"},
+    ).get_json()["session"]
+
+    response = client.post(
+        "/dataset/api/dataset/collect",
+        data={
+            "file": (io.BytesIO(sample_jpeg), "frame.jpg"),
+            "gesture_id": gesture.id,
+            "session_id": session["id"],
+            "participant_code": "LANDMARK01",
+        },
+        content_type="multipart/form-data",
+    )
+    assert response.status_code == 201
+    body = response.get_json()
+    assert body["stored"] is True
+    assert len(body["landmarks"]["hands"]) == 1
+    assert len(body["landmarks"]["hands"][0]["landmarks"]) == 21

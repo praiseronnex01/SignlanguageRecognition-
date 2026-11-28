@@ -1,0 +1,60 @@
+{% extends "landing_base.html" %}
+{% block title %}Developer &middot; {{ project_short_name }}{% endblock %}
+{% block description %}Meet Praise Ronnex Mtafya, the developer and author of the Malawi Sign Language recognition project.{% endblock %}
+
+{% block landing_content %}
+<main>
+    <section class="border-b border-line bg-surface">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+            <p class="text-xs font-medium text-slate-500"><a href="{{ url_for('landing.about') }}" class="hover:text-accent">About</a> / Developer</p>
+            <div class="mt-6 grid items-center gap-8 lg:grid-cols-[1fr_1.2fr]">
+                <div class="card flex items-center gap-5 p-6 sm:p-8">
+                    <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white">PR</span>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-accent">Developer &amp; project author</p>
+                        <h1 class="mt-2 text-2xl font-bold text-navy sm:text-3xl">Praise Ronnex Mtafya</h1>
+                        <p class="mt-2 text-sm text-navy-muted">Final-year Computer Science project</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-navy">Building practical tools with computer vision and machine learning</h2>
+                    <p class="mt-3 text-sm leading-relaxed text-navy-muted">
+                        This project was designed and developed by Praise Ronnex Mtafya as an academic prototype for
+                        Malawi Sign Language recognition. It covers the full workflow from consented data collection
+                        and model training to a browser-based recognition experience.
+                    </p>
+                    <a href="mailto:mtafyapraise1@gmail.com" class="btn btn-primary mt-6"><i class="fa-solid fa-envelope"></i> Contact by email</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="border-b border-line bg-white">
+        <div class="mx-auto grid max-w-6xl gap-6 px-4 py-14 sm:px-6 md:grid-cols-2">
+            <article class="card p-6">
+                <h2 class="text-lg font-semibold text-navy">Developer information</h2>
+                <dl class="mt-5 divide-y divide-line text-sm">
+                    <div class="flex flex-wrap justify-between gap-2 py-3"><dt class="text-slate-500">Full name</dt><dd class="font-medium text-navy">Praise Ronnex Mtafya</dd></div>
+                    <div class="flex flex-wrap justify-between gap-2 py-3"><dt class="text-slate-500">Qualification</dt><dd class="font-medium text-navy">BSc</dd></div>
+                    <div class="flex flex-wrap justify-between gap-2 py-3"><dt class="text-slate-500">Registration number</dt><dd class="font-medium text-navy">23311351022</dd></div>
+                    <div class="flex flex-wrap justify-between gap-2 py-3"><dt class="text-slate-500">Email</dt><dd><a href="mailto:mtafyapraise1@gmail.com" class="font-medium text-accent hover:underline">mtafyapraise1@gmail.com</a></dd></div>
+                </dl>
+            </article>
+            <article class="card p-6">
+                <h2 class="text-lg font-semibold text-navy">Project contributions</h2>
+                <ul class="mt-5 space-y-3 text-sm leading-relaxed text-navy-muted">
+                    <li class="flex gap-3"><i class="fa-solid fa-code mt-1 text-accent"></i> Flask web application, authentication and role-based administration.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-hand-sparkles mt-1 text-accent"></i> MediaPipe landmark extraction and browser camera integration.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-brain mt-1 text-accent"></i> Dataset management, model training, evaluation and publication workflow.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-shield-halved mt-1 text-accent"></i> Consent-aware data handling and explicit human validation of MSL signs.</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-6" aria-label="Developer page navigation">
+        <a href="{{ url_for('landing.about') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to About</a>
+        <a href="{{ url_for('landing.index') }}" class="btn btn-primary">Next: Home <i class="fa-solid fa-arrow-right"></i></a>
+    </nav>
+</main>
+{% endblock %}

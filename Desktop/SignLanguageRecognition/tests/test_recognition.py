@@ -254,7 +254,7 @@ def test_a_low_confidence_prediction_is_rejected(app, tmp_path):
 def test_predict_with_a_valid_image(client, login_user, stub_detector, sample_jpeg):
     stub_detector.hands_to_return = [make_hand_observation(shape="open")]
     response = client.post(
-        "/recognition/api/predict",
+        "/recognition/api/predict?include_landmarks=1",
         data={"file": (io.BytesIO(sample_jpeg), "frame.jpg")},
         content_type="multipart/form-data",
     )
@@ -263,6 +263,8 @@ def test_predict_with_a_valid_image(client, login_user, stub_detector, sample_jp
     assert body["success"] is True
     assert "recognized" in body
     assert "hand_detected" in body
+    assert len(body["landmarks"]["hands"]) == 1
+    assert len(body["landmarks"]["hands"][0]["landmarks"]) == 21
 
 
 def test_predict_with_an_invalid_image(client, login_user, stub_detector):

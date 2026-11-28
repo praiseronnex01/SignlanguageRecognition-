@@ -1,0 +1,70 @@
+{% extends "landing_base.html" %}
+{% block title %}About &middot; {{ project_short_name }}{% endblock %}
+{% block description %}Learn about the purpose, technical approach and responsible scope of the Malawi Sign Language recognition project.{% endblock %}
+
+{% block landing_content %}
+<main>
+    <section class="border-b border-line bg-surface">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+            <p class="text-xs font-medium text-slate-500"><a href="{{ url_for('landing.index') }}" class="hover:text-accent">Home</a> / About</p>
+            <span class="badge badge-info mt-5"><i class="fa-solid fa-circle-info"></i> About the project</span>
+            <h1 class="mt-4 max-w-4xl text-3xl font-bold leading-tight text-navy sm:text-4xl">About the MSL Recognition System</h1>
+            <p class="mt-4 max-w-3xl text-[15px] leading-relaxed text-navy-muted">
+                This final-year project explores how computer vision and machine learning can support the recognition
+                of static Malawi Sign Language gestures from a standard webcam. It combines a privacy-conscious
+                dataset workflow, participant-independent model evaluation and a clear human validation process.
+            </p>
+        </div>
+    </section>
+
+    <section class="border-b border-line bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+            <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+                {% set cards = [
+                    ('fa-bullseye', 'Purpose', 'Provide a practical research prototype for recognising a carefully selected set of static MSL hand gestures.'),
+                    ('fa-hand-sparkles', 'Technical approach', 'MediaPipe extracts normalised hand landmarks, and a trained classifier maps the resulting features to an approved sign.'),
+                    ('fa-shield-halved', 'Responsible design', 'Store landmark data rather than raw video, record participant consent and require explicit sign validation.'),
+                    ('fa-chart-line', 'Evaluation', 'Keep each participant entirely within one data split so reported performance reflects unseen people.')
+                ] %}
+                {% for icon, title, text in cards %}
+                <article class="card p-5">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft text-accent"><i class="fa-solid {{ icon }}"></i></span>
+                    <h2 class="mt-4 text-base font-semibold text-navy">{{ title }}</h2>
+                    <p class="mt-2 text-sm leading-relaxed text-navy-muted">{{ text }}</p>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="border-b border-line bg-surface">
+        <div class="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
+            <div>
+                <h2 class="text-2xl font-bold text-navy">What the system can do</h2>
+                <ul class="mt-5 space-y-3 text-sm leading-relaxed text-navy-muted">
+                    <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-accent"></i> Detect one or two hands and extract 21 landmarks per hand.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-accent"></i> Collect consented landmark samples and manage the MSL vocabulary.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-accent"></i> Train, compare and publish machine-learning models with evaluation reports.</li>
+                    <li class="flex gap-3"><i class="fa-solid fa-circle-check mt-1 text-accent"></i> Show confidence-scored predictions and export personal recognition history.</li>
+                </ul>
+            </div>
+            <div class="card border-l-4 border-l-warn p-6">
+                <h2 class="flex items-center gap-2 text-lg font-semibold text-navy"><i class="fa-solid fa-triangle-exclamation text-warn"></i> Important scope</h2>
+                <p class="mt-3 text-sm leading-relaxed text-navy-muted">
+                    The prototype recognises individual static gestures only. It does not translate full sentences,
+                    dynamic movement or facial expressions, and it is not intended for safety-critical communication.
+                </p>
+                <p class="mt-3 text-sm leading-relaxed text-navy-muted">
+                    A sign becomes available for recognition only after a competent Malawi Sign Language signer or
+                    knowledgeable instructor has verified it.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-6" aria-label="About page navigation">
+        <a href="{{ url_for('landing.index') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+        <a href="{{ url_for('landing.developer') }}" class="btn btn-primary">Next: Developer <i class="fa-solid fa-arrow-right"></i></a>
+    </nav>
+</main>
+{% endblock %}

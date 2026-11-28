@@ -186,7 +186,7 @@
                         <td class="whitespace-nowrap text-slate-500">{{ model.created_at|datetime }}</td>
                         <td class="text-right">
                             <div class="flex justify-end gap-2">
-                                {% if model.status != 'published' %}
+                                {% if model.status in ['candidate', 'archived'] %}
                                 <button type="button" class="btn btn-secondary btn-sm js-publish-model" data-id="{{ model.id }}">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Publish
                                 </button>
@@ -287,20 +287,21 @@
         }
     });
 
+    function hasActiveRuns() {
+        let active = false;
+        runsBody.querySelectorAll(".js-run-status").forEach(function (status) {
+            const value = status.textContent.trim();
+            if (value === "running" || value === "queued") active = true;
+        });
+        return active;
+    }
+
     function startPolling() {
         if (pollTimer) window.clearInterval(pollTimer);
         pollTimer = window.setInterval(async function () {
             await loadRuns();
             await loadModels();
-            const active = runsBody.querySelectorAll('[data-run-id]');
-            let stillRunning = false;
-            active.forEach(function (row) {
-                const status = row.querySelector(".js-run-status");
-                if (status && (status.textContent.trim() === "running" || status.textContent.trim() === "queued")) {
-                    stillRunning = true;
-                }
-            });
-            if (!stillRunning) {
+            if (!hasActiveRuns()) {
                 window.clearInterval(pollTimer);
                 pollTimer = null;
             }
@@ -350,6 +351,12 @@
                 const row = document.createElement("tr");
                 const tone = { published: "badge-ok", candidate: "badge-info", training: "badge-warn", failed: "badge-bad", archived: "badge-muted" };
                 const schema = model.feature_schema || {};
+                let action = "";
+                if (model.status === "published") {
+                    action = '<button type="button" class="btn btn-secondary btn-sm js-archive-model" data-id="' + model.id + '"><i class="fa-solid fa-box-archive"></i> Archive</button>';
+                } else if (model.status === "candidate" || model.status === "archived") {
+                    action = '<button type="button" class="btn btn-secondary btn-sm js-publish-model" data-id="' + model.id + '"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>';
+                }
                 row.innerHTML =
                     '<td class="font-medium text-navy">' + window.MSL.escapeHtml(model.version) + "</td>" +
                     "<td>" + window.MSL.escapeHtml(String(model.algorithm || "").replace(/_/g, " ")) + "</td>" +
@@ -359,11 +366,7 @@
                     "<td>" + (model.rejection_threshold ? Number(model.rejection_threshold).toFixed(2) : "-") + "</td>" +
                     '<td><span class="badge ' + (tone[model.status] || "badge-muted") + ' js-model-status">' + model.status + "</span></td>" +
                     '<td class="whitespace-nowrap text-slate-500">' + window.MSL.formatDateTime(model.created_at) + "</td>" +
-                    '<td class="text-right"><button type="button" class="btn btn-secondary btn-sm ' +
-                    (model.status === "published" ? "js-archive-model" : "js-publish-model") +
-                    '" data-id="' + model.id + '"><i class="fa-solid ' +
-                    (model.status === "published" ? "fa-box-archive" : "fa-cloud-arrow-up") + '"></i> ' +
-                    (model.status === "published" ? "Archive" : "Publish") + "</button></td>";
+                    '<td class="text-right">' + action + "</td>";
                 modelsBody.appendChild(row);
             });
             bindModelButtons();
@@ -404,7 +407,9 @@
     });
 
     bindModelButtons();
-    loadRuns();
+    loadRuns().then(function () {
+        if (hasActiveRuns()) startPolling();
+    });
     loadModels();
 })();
 </script>

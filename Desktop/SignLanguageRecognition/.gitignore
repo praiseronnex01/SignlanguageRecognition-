@@ -23,6 +23,7 @@ instance/uploads/
 
 # MediaPipe model asset (downloaded, not committed)
 assets/models/*.task
+!assets/models/hand_landmarker.task
 
 # Generated datasets and artefacts
 dataset/raw/*
@@ -46,6 +47,7 @@ htmlcov/
 .tox/
 
 # Editors and OS
+.railway/
 .idea/
 .vscode/
 *.swp

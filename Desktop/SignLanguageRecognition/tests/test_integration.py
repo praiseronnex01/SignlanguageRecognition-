@@ -303,6 +303,50 @@ def test_the_landing_page_is_public(app, client):
     response = client.get("/")
     assert response.status_code == 200
     assert b"Malawi Sign Language" in response.data
+    assert b"Next: About" in response.data
+
+
+@pytest.mark.parametrize(
+    ("path", "expected"),
+    [
+        ("/", b"Home"),
+        ("/about", b"About the MSL Recognition System"),
+        ("/developer", b"Praise Ronnex Mtafya"),
+    ],
+)
+def test_public_information_pages_render(app, client, path, expected):
+    response = client.get(path)
+    assert response.status_code == 200
+    assert expected in response.data
+    assert b'href="/about"' in response.data
+    assert b'href="/developer"' in response.data
+
+
+def test_developer_page_shows_registration_and_contact_details(app, client):
+    response = client.get("/developer")
+    assert response.status_code == 200
+    assert b"23311351022" in response.data
+    assert b"mailto:mtafyapraise1@gmail.com" in response.data
+    assert b"Back to About" in response.data
+    assert b"Next: Home" in response.data
+
+
+def test_protected_api_returns_json_for_anonymous_users(client):
+    response = client.get("/api/dashboard/stats")
+    assert response.status_code == 401
+    assert response.is_json is True
+    assert response.get_json()["success"] is False
+
+
+def test_filtered_history_export_link_preserves_filters(app, client, login_user):
+    response = client.get(
+        "/history?search=TEST_SIGN&date_from=2026-01-01&date_to=2026-12-31"
+    )
+    assert response.status_code == 200
+    assert (
+        b"search=TEST_SIGN&amp;date_from=2026-01-01&amp;date_to=2026-12-31"
+        in response.data
+    )
 
 
 def test_every_navigation_link_resolves(app, client, login_admin):

@@ -34,7 +34,7 @@
                     confidenceThreshold: 0.6,
                     confirmationFrames: 3,
                     neutralFramesToReset: 8,
-                    predictUrl: "/recognition/api/predict",
+                    predictUrl: "/recognition/api/predict?include_landmarks=1",
                     saveUrl: "/recognition/api/save",
                     landmarkConnection: CONNECTION_LANDMARKS
                 },

@@ -31,6 +31,39 @@ def test_register_creates_a_hashed_account(client, app):
         assert user.check_password("wrong") is False
 
 
+def test_registration_page_creates_an_account(client, app):
+    response = client.post(
+        "/auth/register",
+        data={
+            "full_name": "Page User",
+            "email": "page.user@example.com",
+            "password": "PagePass123!",
+            "confirm_password": "PagePass123!",
+            "accept_terms": "y",
+            "submit": "Create account",
+        },
+        follow_redirects=True,
+    )
+    assert response.status_code == 200
+    assert b"Dashboard" in response.data
+    with app.app_context():
+        assert User.query.filter_by(email="page.user@example.com").first() is not None
+
+
+def test_login_page_authenticates_an_account(client, standard_user):
+    response = client.post(
+        "/auth/login",
+        data={
+            "email": standard_user.email,
+            "password": "User12345",
+            "submit": "Sign in",
+        },
+        follow_redirects=True,
+    )
+    assert response.status_code == 200
+    assert b"Dashboard" in response.data
+
+
 def test_register_rejects_a_duplicate_email(client, standard_user):
     response = client.post(
         "/auth/api/auth/register",

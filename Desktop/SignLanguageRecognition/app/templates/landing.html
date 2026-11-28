@@ -1,40 +1,9 @@
-{% extends "base.html" %}
+{% extends "landing_base.html" %}
 {% block title %}{{ project_name }}{% endblock %}
 {% block description %}Recognise static Malawi Sign Language gestures in real time using MediaPipe hand landmarks and a Random Forest classifier.{% endblock %}
 
-{% block body %}
-<div class="min-h-full bg-white">
-
-    <!-- ================= Public header ================= -->
-    <header class="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
-        <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-            <a href="{{ url_for('landing.index') }}" class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-navy text-white">
-                    <i class="fa-solid fa-hand-sparkles"></i>
-                </span>
-                <span class="leading-tight">
-                    <span class="block text-sm font-semibold text-navy">MSL Recognition</span>
-                    <span class="block text-[11px] text-slate-500">Computer vision &amp; machine learning</span>
-                </span>
-            </a>
-
-            <nav class="ml-auto hidden items-center gap-7 text-sm font-medium text-navy-muted md:flex">
-                <a href="#how-it-works" class="hover:text-accent">How it works</a>
-                <a href="#features" class="hover:text-accent">Features</a>
-                <a href="#how-to-use" class="hover:text-accent">How to use</a>
-                <a href="#limitations" class="hover:text-accent">Limitations</a>
-            </nav>
-
-            <div class="ml-auto flex items-center gap-2 md:ml-0">
-                {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">Open dashboard</a>
-                {% else %}
-                <a href="{{ url_for('auth.login_page') }}" class="btn btn-secondary">Sign in</a>
-                <a href="{{ url_for('auth.register_page') }}" class="btn btn-primary">Create account</a>
-                {% endif %}
-            </div>
-        </div>
-    </header>
+{% block landing_content %}
+<main>
 
     <!-- ================= Hero ================= -->
     <section class="border-b border-line bg-surface">
@@ -232,34 +201,10 @@
         </div>
     </section>
 
-    <!-- ================= Footer ================= -->
-    <footer class="bg-navy text-slate-400">
-        <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-            <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                    <div class="flex items-center gap-3">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white">
-                            <i class="fa-solid fa-hand-sparkles"></i>
-                        </span>
-                        <span class="text-sm font-semibold text-white">MSL Recognition System</span>
-                    </div>
-                    <p class="mt-3 max-w-md text-xs leading-relaxed">
-                        AI-Based Malawi Sign Language Recognition System Using Computer Vision and Machine Learning.
-                        Final-year Computer Science project.
-                    </p>
-                </div>
-                <div class="text-xs">
-                    <p class="font-semibold text-slate-200">Resources</p>
-                    <ul class="mt-2 space-y-1.5">
-                        <li><a href="{{ msl_reference_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-white">Malawian Sign Language Dictionary</a></li>
-                        <li><a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" rel="noopener noreferrer" class="hover:text-white">MediaPipe Hand Landmarker</a></li>
-                    </ul>
-                </div>
-            </div>
-            <p class="mt-8 border-t border-white/10 pt-5 text-[11px]">
-                &copy; {{ current_year }} {{ project_name }}. No participant video is stored by this application.
-            </p>
-        </div>
-    </footer>
-</div>
+    <!-- ================= Public page navigation ================= -->
+    <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 sm:px-6" aria-label="Home page navigation">
+        <p class="text-xs font-medium text-slate-500">Home &middot; Page 1 of 3</p>
+        <a href="{{ url_for('landing.about') }}" class="btn btn-primary">Next: About <i class="fa-solid fa-arrow-right"></i></a>
+    </nav>
+</main>
 {% endblock %}

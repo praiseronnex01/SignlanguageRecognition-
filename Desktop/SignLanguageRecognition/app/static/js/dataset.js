@@ -397,6 +397,7 @@
                 showMessage("Collection session closed.", "ok");
                 state.sessionId = null;
                 els.sessionLabel.textContent = "No active session";
+                els.btnStartCollection.disabled = true;
                 refreshStats();
             } catch (error) {
                 showMessage(error.message, "bad");

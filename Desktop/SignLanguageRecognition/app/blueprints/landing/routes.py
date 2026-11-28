@@ -17,3 +17,15 @@ def index():
         "landing.html",
         validated_count=validated_count,
     )
+
+
+@bp.route("/about")
+def about():
+    """Explain the project purpose, approach and scope."""
+    return render_template("about.html")
+
+
+@bp.route("/developer")
+def developer():
+    """Show the project author and contact information."""
+    return render_template("developer.html")
